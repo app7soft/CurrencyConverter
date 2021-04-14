@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">CurrencyConverter</string>
+    <string name="UpdatingRates">Updating Rates</string>
+    <string name="LastUpdate">Last update: </string>
+    <string name="LoadingFailed">Rates loading Failed</string>
+    <string name="CheckConnection">Check Your internet connection and refresh</string>
+
+    <!--<string name="banner_ad_unit_id">ca-app-pub-5209961561922052/2707233821</string>-->
+    <!--Test Baner ADD-->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
+
+</resources>

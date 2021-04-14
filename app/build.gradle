@@ -1,0 +1,67 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    //id 'com.google.gms.google-services'  // Google Services plugin
+    //id 'com.google.firebase.crashlytics'
+}
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.app7soft.currencyconverter"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 2
+        versionName "1.1"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.android.gms:play-services-ads:19.5.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.android.play:core:1.8.2'
+    implementation 'com.google.android.play:core-ktx:1.8.1'
+    implementation 'com.jakewharton.timber:timber:4.7.1' //For Logging
+    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    //implementation 'com.google.firebase:firebase-analytics-ktx'
+    //implementation 'com.google.android.gms:play-services-analytics:17.0.0' do Google Analytics
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
+}
