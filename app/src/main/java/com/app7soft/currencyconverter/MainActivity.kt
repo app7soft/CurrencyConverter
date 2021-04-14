@@ -242,7 +242,6 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = ArrayAdapter(this, R.layout.ghost_text, currencySymbols)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        //adapter.setDropDownViewResource(R.layout.custom_spinner_row)
 
         from_spinner.adapter = adapter
         //from_spinner.setSelection(117)
