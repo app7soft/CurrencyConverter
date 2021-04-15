@@ -4,6 +4,7 @@ package com.app7soft.currencyconverter
 import MySingleton
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +16,7 @@ import com.android.volley.toolbox.*
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.MobileAds
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
@@ -56,12 +58,20 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
+
         if(!sharedPreferences.contains("RunNumber")){
+            val CurrentCountry = resources.configuration.locale
+            val CurrentCurrency = Currency.getInstance(CurrentCountry).currencyCode
             Timber.tag("Mik").d("APLIKACJA URUCHOMIONA PIERWSZY RAZ....")
+            Timber.tag("Mik").d("Currency code: "+CurrentCurrency)
             editor.putInt("RunNumber", 1)
             editor.putString("LastUpdate", " rates no updated yet")
-            editor.putString("Currency1Symbol", "EUR")
-            editor.putString("Currency2Symbol", "PLN")
+            editor.putString("Currency1Symbol", CurrentCurrency)
+            if(CurrentCurrency != "EUR"){
+                editor.putString("Currency2Symbol", "EUR")
+            }else{
+                editor.putString("Currency2Symbol", "USD")
+            }
             editor.commit()
         }else {
             Timber.tag("Mik").d("To NIE jest pierwsza instalacja aplikacji")
@@ -134,10 +144,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-            /*var requestConfiguration = MobileAds.getRequestConfiguration().toBuilder().build()
+            var requestConfiguration = MobileAds.getRequestConfiguration().toBuilder().build()
             MobileAds.setRequestConfiguration(requestConfiguration)
             MobileAds.initialize(this)
-            adViewMain.loadAd(AdRequest.Builder().build())*/
+            adViewMain.loadAd(AdRequest.Builder().build())
 
         mInterstitialAd = InterstitialAd(this).apply {
             adUnitId = InterstitialID
@@ -477,8 +487,13 @@ class MainActivity : AppCompatActivity() {
         val diff = Date().getTime()-date1
         val seconds = diff / 1000
         val minutes = seconds / 60
-        Timber.tag("Mik").d("LastUpdateDiff: "+minutes.toInt().toString())
+        Timber.tag("Mik").d("LastUpdateDiff: " + minutes.toInt().toString())
         return minutes.toInt()
+    }
+
+    fun BMenuClicked(view: View) {
+        val intent = Intent(this, Menu::class.java)
+        startActivity(intent)
     }
 
 }

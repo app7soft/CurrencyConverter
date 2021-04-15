@@ -1,9 +1,14 @@
 <resources>
-    <string name="app_name">CurrencyConverter</string>
+    <string name="app_name">Currency Converter</string>
     <string name="UpdatingRates">Updating Rates</string>
     <string name="LastUpdate">Last update: </string>
     <string name="LoadingFailed">Rates loading Failed</string>
     <string name="CheckConnection">Check Your internet connection and refresh</string>
+    <string name="Rate">Rate app</string>
+    <string name="Info">Info</string>
+    <string name="Privacy">Privacy</string>
+    <string name="PrivacyPolicy"><a href="https://docs.google.com/document/d/1fVCdU1wN4IBz-u3tfrVLy1r_YbL9B1eVFYE6O76w2v0/edit?usp=sharing">Privacy Policy</a></string>
+    <string name="MyCurrency">MyCurrency</string>
 
     <!--<string name="banner_ad_unit_id">ca-app-pub-5209961561922052/2707233821</string>-->
     <!--Test Baner ADD-->

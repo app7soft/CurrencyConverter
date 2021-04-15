@@ -66,5 +66,19 @@
         <item name="android:textSize">@dimen/_15ssp</item>
     </style>
 
+    <style name="RateApp">
+        <item name="android:textColor">@color/TextPurple</item>
+        <item name="android:fontFamily">@font/circular_pro_book</item>
+        <item name="android:textSize">@dimen/_15ssp</item>
+    </style>
+
+    <style name="app7soft">
+        <item name="android:textSize">@dimen/_12ssp</item>
+        <item name="android:alpha">0.7</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColorLink">#ffffff</item>
+        <item name="android:fontFamily">@font/circular_pro_book</item>
+    </style>
+
 </resources>
 

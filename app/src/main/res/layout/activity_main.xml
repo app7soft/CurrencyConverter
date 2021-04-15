@@ -8,13 +8,23 @@
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/WhiteSpace"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#ffffff"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
         android:id="@+id/TloMenu"
         android:layout_width="0dp"
         android:layout_height="@dimen/_38sdp"
         android:background="#3DB782"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adViewMain" />
+        app:layout_constraintTop_toBottomOf="@+id/WhiteSpace" />
 
     <TextView
         android:id="@+id/MyCurrency"
@@ -22,7 +32,7 @@
         android:layout_height="wrap_content"
         style="@style/MyCurrency"
         android:fontFamily="@font/circular_pro_medium"
-        android:text="MyCurrency"
+        android:text="@string/MyCurrency"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/TloMenu"
@@ -66,7 +76,7 @@
         android:layout_height="0dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:onClick="SettingsClicked"
+        android:onClick="BMenuClicked"
         android:layout_marginLeft="@dimen/_10sdp"
         app:layout_constraintHeight_percent="0.038"
         app:layout_constraintWidth_percent="0.067"
