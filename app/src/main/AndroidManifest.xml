@@ -14,10 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CurrencyConverter"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Menu"
+        <activity android:name=".Info"></activity>
+        <activity
+            android:name=".Menu"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

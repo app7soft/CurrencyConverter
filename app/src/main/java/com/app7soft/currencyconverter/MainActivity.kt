@@ -17,6 +17,8 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
@@ -28,10 +30,12 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        //var InterstitialID = "ca-app-pub-5209961561922052/7183758786" //Real for 361
-        var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
+        var InterstitialID = "ca-app-pub-5209961561922052/7183758786" //Real for 361
+        //var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
         lateinit var mInterstitialAd: InterstitialAd
         var AdErrorCount = 0 //próbujemy wczytywac maksymalnie 5 razy co 2 sekundy
+        var ShowIntRunNumber: Int = 4 //Interstitial Reklmay pokazujemy od 4 uruchomienia
+        var ShowIntMin: Int = 480 //Interstitial pokazujemy nieczęsciej niz co 480 min = 8h
     }
 
     private var CurrencyRatesResponse: JSONObject? = null //Obecne kursy walut zwócone przez API
@@ -43,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     var RatesUpdateOnStart: Boolean = true
     var gson = Gson()
     var json: String? ="" //temporary string to convert gson.JsonObject to JSONObject
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar)
@@ -97,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         val refresh = findViewById(R.id.refresh) as ImageView;
         refresh.setOnClickListener {
             getRequest()
+            showAdd()
         }
 
         from_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -109,6 +113,7 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
             ) {
+                showAdd()
                 Currency1Symbol.text=from_spinner.selectedItem.toString()
                 if(FlagaResource(from_spinner.selectedItem.toString()) != 0){
                     Flaga1.setImageResource(FlagaResource(from_spinner.selectedItem.toString()))
@@ -131,6 +136,7 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
             ) {
+                showAdd()
                 Currency2Symbol.text=to_spinner.selectedItem.toString()
                 if(FlagaResource(to_spinner.selectedItem.toString()) != 0){
                     Flaga2.setImageResource(FlagaResource(to_spinner.selectedItem.toString()))
@@ -144,27 +150,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-            var requestConfiguration = MobileAds.getRequestConfiguration().toBuilder().build()
-            MobileAds.setRequestConfiguration(requestConfiguration)
-            MobileAds.initialize(this)
-            adViewMain.loadAd(AdRequest.Builder().build())
+        var requestConfiguration = MobileAds.getRequestConfiguration().toBuilder().build()
+        MobileAds.setRequestConfiguration(requestConfiguration)
+        MobileAds.initialize(this)
+        adViewMain.loadAd(AdRequest.Builder().build())
 
         mInterstitialAd = InterstitialAd(this).apply {
             adUnitId = InterstitialID
             adListener = (object : AdListener() {
                 override fun onAdLoaded() {
-                    //Timber.tag("Mik").d("The interstitial Loaded")
+                    Timber.tag("Mik").d("The interstitial Loaded")
                     AdErrorCount = 0
                 }
                 override fun onAdClosed() {
-                    //Timber.tag("Mik").d("The interstitial Closed. Reloading...")
+                    val editor = sharedPreferences.edit()
+                    editor.putLong("InterstitialTime", Date().getTime())
+                    editor.commit()
+                    Timber.tag("Mik").d("The interstitial Closed. Reloading...")
                     mInterstitialAd.loadAd(AdRequest.Builder().build())
                 }
                 override fun onAdFailedToLoad(errorCode: Int) {
                     //Timber.tag("Mik").d("Ad Failed to Load with code: " + errorCode.toString())
                     AdErrorCount++
                     //Timber.tag("Mik").d("AdErrorCount: " + AdErrorCount.toString())
-                    if (AdErrorCount<4) {
+                    if (AdErrorCount <4) {
                         Handler().postDelayed({
                             //Timber.tag("Mik").d("Try to load again...")
                             mInterstitialAd.loadAd(AdRequest.Builder().build())
@@ -176,6 +185,9 @@ class MainActivity : AppCompatActivity() {
         //.tag("Mik").d("Loading Interstitial")
         AdErrorCount = 0
         mInterstitialAd.loadAd(AdRequest.Builder().build())
+
+        //initInterstitialAds(sharedPreferences)
+        initDatabaseData()  //zczytujemy dane z Bazy Danych Firebase
     }
 
     private fun getRequest() {
@@ -440,10 +452,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.C -> {
+                showAdd()
                 Currency1.text = "0"
                 Currency2.text = "0"
             }
             R.id.Del -> {
+                showAdd()
                 if (Currency1.text.length == 1) {
                     Currency1.text = "0"
                     Currency2.text = "0"
@@ -494,6 +508,30 @@ class MainActivity : AppCompatActivity() {
     fun BMenuClicked(view: View) {
         val intent = Intent(this, Menu::class.java)
         startActivity(intent)
+    }
+
+    public fun  LastInterstitialMin(sharepref: SharedPreferences):Int{
+        val date1 = sharepref.getLong("InterstitialTime", 0)
+        if(date1.toInt() == 0){
+            Timber.tag("Mik").d("LastInterstitialMin: 6000")
+            return 6000 //Jeśli nie było jeszcze wyswietlenia to trkatujemy jakby mineło 6000 min
+        } else {
+            val diff = Date().getTime()-date1
+            val seconds = diff / 1000
+            val minutes = seconds / 60
+            Timber.tag("Mik").d("LastInterstitialMin: "+minutes.toInt().toString())
+            return minutes.toInt()
+        }
+    }
+
+    fun showAdd(){
+       if (sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && MainActivity().LastInterstitialMin(sharedPreferences) >= MainActivity.ShowIntMin){
+            if (mInterstitialAd.isLoaded) {
+                mInterstitialAd.show()
+            } else {
+                Timber.tag("Mik").d( "The interstitial wasn't loaded yet.")
+            }
+       }
     }
 
 }

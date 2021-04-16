@@ -11,7 +11,7 @@
         android:id="@+id/WhiteSpace"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#000000"
+        android:background="#ffffff"
         android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +69,15 @@
         app:layout_constraintTop_toTopOf="@+id/TloLastUpdate"
         app:layout_constraintBottom_toBottomOf="@+id/TloLastUpdate"/>
 
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:onClick="BMenuClicked"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TloMenu"
+        app:layout_constraintWidth_percent="0.15"/>
 
     <ImageView
         android:id="@+id/menu"
@@ -76,7 +85,6 @@
         android:layout_height="0dp"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:onClick="BMenuClicked"
         android:layout_marginLeft="@dimen/_10sdp"
         app:layout_constraintHeight_percent="0.038"
         app:layout_constraintWidth_percent="0.067"
@@ -400,9 +408,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/Del"
         app:srcCompat="@drawable/del" />
 
-
-
-
     <ProgressBar
         android:id="@+id/DataLoading"
         style="@style/Widget.AppCompat.ProgressBar"
@@ -415,7 +420,6 @@
         app:layout_constraintTop_toTopOf="@+id/RefreshDate"
         app:layout_constraintHeight_percent="0.03"
         app:layout_constraintWidth_percent="0.05"/>
-
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adViewMain"
