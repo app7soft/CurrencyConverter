@@ -7,14 +7,15 @@
     <string name="Rate">Rate app</string>
     <string name="Info">Info</string>
     <string name="Privacy">Privacy</string>
+    <string name="Share">Share</string>
     <string name="PrivacyPolicy"><a href="https://docs.google.com/document/d/1fVCdU1wN4IBz-u3tfrVLy1r_YbL9B1eVFYE6O76w2v0/edit?usp=sharing">Privacy Policy</a></string>
     <string name="MyCurrency">MyCurrency</string>
     <string name="NoticeBold">Notice</string>
-    <string name="Notice">The rates published here are informational, and may differ from your bank\'s official exchange rates. Rates can change at any time without notice.\n\nWe accept no liability whatsoever for any loss or damages suffered through any act or omission taken as a result of reading or interpreting any of the information contained or related to this app.</string>
+    <string name="Notice">The exchange rates provided here are indicative only and may differ from the official rate at your bank. Rates may change at any time.\n\nWe are not responsible for any losses arising from reading or interpreting the information contained in this app.\nBefore any transaction you should always check official rates in your bank or exchange point.</string>
 
-    <string name="banner_ad_unit_id">ca-app-pub-5209961561922052/2707233821</string>
+    <!--<string name="banner_ad_unit_id">ca-app-pub-5209961561922052/2707233821</string>-->
     <!--Test Baner ADD-->
-    <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
 
 </resources>

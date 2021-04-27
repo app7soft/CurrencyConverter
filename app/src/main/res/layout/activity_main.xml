@@ -97,7 +97,7 @@
         android:id="@+id/Flaga1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:srcCompat="@drawable/usd"
+        app:srcCompat="@drawable/eur"
         android:layout_marginLeft="@dimen/_9sdp"
         android:scaleType="fitCenter"
         app:layout_constraintHeight_percent="0.058"
@@ -150,10 +150,12 @@
         android:focusable="auto"
         android:padding="5dp"
         android:translationX="@dimen/_5sdp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"
         app:layout_constraintEnd_toStartOf="@+id/Currency1tlo"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
-        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/to_spinner"
@@ -172,7 +174,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/azn"
+        app:srcCompat="@drawable/usd"
         android:layout_marginLeft="@dimen/_9sdp"
         app:layout_constraintHeight_percent="0.058"
         app:layout_constraintWidth_percent="0.13"

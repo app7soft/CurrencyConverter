@@ -13,10 +13,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.*
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -26,6 +23,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         var AdErrorCount = 0 //próbujemy wczytywac maksymalnie 5 razy co 2 sekundy
         var ShowIntRunNumber: Int = 4 //Interstitial Reklmay pokazujemy od 4 uruchomienia
         var ShowIntMin: Int = 480 //Interstitial pokazujemy nieczęsciej niz co 480 min = 8h
+        var currencySymbols: ArrayList<String> = ArrayList()
+        var SymbolsToNamesCollection = HashMap<String, Any>()
     }
 
     private var CurrencyRatesResponse: JSONObject? = null //Obecne kursy walut zwócone przez API
@@ -86,10 +86,8 @@ class MainActivity : AppCompatActivity() {
         RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
         if (sharedPreferences.contains("CurrencyRatesResponse")) {
             CurrencyRatesResponse = gson.fromJson(sharedPreferences.getString("CurrencyRatesResponse", ""), JSONObject::class.java)
+            SymbolsToNamesResponse = gson.fromJson(sharedPreferences.getString("SymbolsToNamesResponse", ""), JSONObject::class.java)
             MakeAdapter()
-        }
-        if (sharedPreferences.contains("SymbolsToNamesResponse")) {
-            CurrencyRatesResponse = gson.fromJson(sharedPreferences.getString("SymbolsToNamesResponse", ""), JSONObject::class.java)
         }
 
         //If first time or last update was mor than one hour
@@ -229,7 +227,7 @@ class MainActivity : AppCompatActivity() {
                         //Timber.tag("Mik").d(RatesUpdateOnStart.toString())
                         //Timber.tag("Mik").d(sharedPreferences.getInt("RunNumber", 0).toString())
                         showAlertDialog()
-                    }
+                    } //else if (rating starszy niż kilka dni) pokaż alert
                     RatesUpdateOnStart = false
                     //jeśli sie nie ma internetu to pobieramy ostatnie waluty które były
                 }
@@ -257,9 +255,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun MakeAdapter(){
 
-        //SymbolsToNamesCollection = ConvertJsonToHash(SymbolsToNamesResponse!!)
+        SymbolsToNamesCollection = ConvertJsonToHash(SymbolsToNamesResponse!!)
         ratesCollection = ConvertJsonToHash(CurrencyRatesResponse!!)
-        val currencySymbols = ArrayList(ratesCollection.keys)
+        currencySymbols = ArrayList(ratesCollection.keys)
         currencySymbols.sort()
 
         val adapter = ArrayAdapter(this, R.layout.ghost_text, currencySymbols)

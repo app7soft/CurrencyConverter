@@ -40,8 +40,10 @@ class Menu : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun BPrivacyClicked(view: View) {
-        onBackPressed()
+    fun BShareClicked(view: View) {
+        val intent = Intent(this, SymbolSearch::class.java)
+        startActivity(intent)
+        finish()
     }
 
     fun back(view: View) {

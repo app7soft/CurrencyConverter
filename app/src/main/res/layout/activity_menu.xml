@@ -107,7 +107,7 @@
             app:layout_constraintEnd_toEndOf="@+id/InfoButton"/>
 
         <ImageButton
-            android:id="@+id/PrivacyButton"
+            android:id="@+id/ShareButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.069"
@@ -115,7 +115,7 @@
             android:background="@null"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/button_rate"
-            android:onClick="BPrivacyClicked"
+            android:onClick="BShareClicked"
             android:layout_marginTop="@dimen/_7sdp"
             app:layout_constraintTop_toBottomOf="@+id/RateButton"
             app:layout_constraintStart_toStartOf="@+id/InfoButton"
@@ -148,17 +148,17 @@
             app:layout_constraintStart_toStartOf="@+id/RateButton" />
 
         <ImageView
-            android:id="@+id/privacy"
+            android:id="@+id/share"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.038"
             app:layout_constraintWidth_percent="0.067"
-            app:srcCompat="@drawable/privacy"
+            app:srcCompat="@drawable/share"
             android:scaleType="fitCenter"
             android:layout_marginLeft="@dimen/_13sdp"
-            app:layout_constraintTop_toTopOf="@+id/PrivacyButton"
-            app:layout_constraintBottom_toBottomOf="@+id/PrivacyButton"
-            app:layout_constraintStart_toStartOf="@+id/PrivacyButton" />
+            app:layout_constraintTop_toTopOf="@+id/ShareButton"
+            app:layout_constraintBottom_toBottomOf="@+id/ShareButton"
+            app:layout_constraintStart_toStartOf="@+id/ShareButton" />
 
         <ImageView
             android:layout_width="0dp"
@@ -192,9 +192,9 @@
         android:background="@drawable/srate"
         android:scaleType="fitCenter"
         android:layout_marginRight="@dimen/_13sdp"
-        app:layout_constraintTop_toTopOf="@+id/PrivacyButton"
-        app:layout_constraintBottom_toBottomOf="@+id/PrivacyButton"
-        app:layout_constraintEnd_toEndOf="@+id/PrivacyButton" />
+        app:layout_constraintTop_toTopOf="@+id/ShareButton"
+        app:layout_constraintBottom_toBottomOf="@+id/ShareButton"
+        app:layout_constraintEnd_toEndOf="@+id/ShareButton" />
 
     <TextView
         android:id="@+id/infotext"
@@ -223,11 +223,11 @@
         android:layout_height="wrap_content"
         style="@style/RateApp"
         android:fontFamily="@font/circular_pro_book"
-        android:text="@string/Privacy"
+        android:text="@string/Share"
         android:layout_marginLeft="@dimen/_10sdp"
         app:layout_constraintStart_toEndOf="@+id/rate"
-        app:layout_constraintBottom_toBottomOf="@+id/PrivacyButton"
-        app:layout_constraintTop_toTopOf="@+id/PrivacyButton" />
+        app:layout_constraintBottom_toBottomOf="@+id/ShareButton"
+        app:layout_constraintTop_toTopOf="@+id/ShareButton" />
 
     <TextView
         android:id="@+id/App7Soft"
