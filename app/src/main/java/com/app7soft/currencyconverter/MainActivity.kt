@@ -2,6 +2,7 @@ package com.app7soft.currencyconverter
 
 
 import MySingleton
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
+import com.android.volley.Response
 import com.android.volley.toolbox.*
 import com.google.android.gms.ads.*
 import com.google.firebase.database.ktx.database
@@ -61,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-
         if(!sharedPreferences.contains("RunNumber")){
             val CurrentCountry = resources.configuration.locale
             val CurrentCurrency = Currency.getInstance(CurrentCountry).currencyCode
@@ -76,18 +77,24 @@ class MainActivity : AppCompatActivity() {
                 editor.putString("Currency2Symbol", "USD")
             }
             editor.commit()
+            Currency1.text = "0"
+
         }else {
             Timber.tag("Mik").d("To NIE jest pierwsza instalacja aplikacji")
             editor.putInt("RunNumber", sharedPreferences.getInt("RunNumber", 0) + 1) //Inkrementujemy numer uruchomienia
             Currency1.text = sharedPreferences.getString("Currency1Amount", "0")
             editor.commit()
         }
+        setFlags() //Ustawiamy Flagi i Symbole
 
         RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
+
         if (sharedPreferences.contains("CurrencyRatesResponse")) {
             CurrencyRatesResponse = gson.fromJson(sharedPreferences.getString("CurrencyRatesResponse", ""), JSONObject::class.java)
             SymbolsToNamesResponse = gson.fromJson(sharedPreferences.getString("SymbolsToNamesResponse", ""), JSONObject::class.java)
-            MakeAdapter()
+            InitRates()
+            InitNames()
+            updateChildCurrencies()
         }
 
         //If first time or last update was mor than one hour
@@ -95,58 +102,14 @@ class MainActivity : AppCompatActivity() {
             getRequest() //Updejt walut
         }
 
+        //setInitView()
+
         val refresh = findViewById(R.id.refresh) as ImageView;
         refresh.setOnClickListener {
             getRequest()
             showAdd()
         }
 
-        from_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-            override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-            ) {
-                showAdd()
-                Currency1Symbol.text=from_spinner.selectedItem.toString()
-                if(FlagaResource(from_spinner.selectedItem.toString()) != 0){
-                    Flaga1.setImageResource(FlagaResource(from_spinner.selectedItem.toString()))
-                }else{
-                    Flaga1.setImageResource(R.drawable.pusta_flaga)
-                }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString())) //przelicz z nowymi ustawieniami
-                val editor = sharedPreferences.edit()
-                editor.putString("Currency1Symbol", from_spinner.selectedItem.toString())
-                editor.commit()
-            }
-        }
-        to_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-            override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-            ) {
-                showAdd()
-                Currency2Symbol.text=to_spinner.selectedItem.toString()
-                if(FlagaResource(to_spinner.selectedItem.toString()) != 0){
-                    Flaga2.setImageResource(FlagaResource(to_spinner.selectedItem.toString()))
-                }else{
-                    Flaga2.setImageResource(R.drawable.pusta_flaga)
-                }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString())) //przelicz z nowymi ustawieniami
-                val editor = sharedPreferences.edit()
-                editor.putString("Currency2Symbol", to_spinner.selectedItem.toString())
-                editor.commit()
-            }
-        }
 
         var requestConfiguration = MobileAds.getRequestConfiguration().toBuilder().build()
         MobileAds.setRequestConfiguration(requestConfiguration)
@@ -198,14 +161,18 @@ class MainActivity : AppCompatActivity() {
         val urlCurrencyRates = "http://data.fixer.io/api/latest?access_key=7ce1c2205caeba66fbc17e38b3767be5"
         val urlCurrencySymbols = "http://data.fixer.io/api/symbols?access_key=7ce1c2205caeba66fbc17e38b3767be5"
 
+        Timber.tag("Mik").d("jestem1")
+
         MySingleton.getInstance(this).addToRequestQueue(JsonObjectRequest(Request.Method.GET,
                 urlCurrencyRates,
                 null,
                 { response ->
+                    Timber.tag("Mik").d(response.toString())
                     /*timestamp = response.getLong("timestamp")
                     val dt = Instant.ofEpochSecond(timestamp)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDateTime()*/
+                    Timber.tag("Mik").d("responseOK")
                     val sdf = SimpleDateFormat("d MMM yyyy HH:mm")
                     val currentDate = sdf.format(Date())
                     RefreshDate.text = getString(R.string.LastUpdate) + " " + currentDate
@@ -216,12 +183,15 @@ class MainActivity : AppCompatActivity() {
                     editor.putString("CurrencyRatesResponse", gson.toJson(CurrencyRatesResponse))
                     editor.commit()
                     RatesUpdateOnStart = false
-                    MakeAdapter()
+                    Timber.tag("Mik").d("CurrencyRatesResponse:"+CurrencyRatesResponse.toString())
+                    InitRates()
+                    updateChildCurrencies() //przelicz z nowymi danymi
                     //Timber.tag("Mik").d("CurrencyRatesResponse:"+CurrencyRatesResponse.toString())
 
 
                 },
                 {
+                    Timber.tag("Mik").d("response Not OK")
                     RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
                     if ((RatesUpdateOnStart == false) or (sharedPreferences.getInt("RunNumber", 0) == 1)) {
                         //Timber.tag("Mik").d(RatesUpdateOnStart.toString())
@@ -232,6 +202,7 @@ class MainActivity : AppCompatActivity() {
                     //jeśli sie nie ma internetu to pobieramy ostatnie waluty które były
                 }
         ))
+        Timber.tag("Mik").d("jestem3")
 
         MySingleton.getInstance(this).addToRequestQueue(JsonObjectRequest(Request.Method.GET,
                 urlCurrencySymbols,
@@ -239,6 +210,7 @@ class MainActivity : AppCompatActivity() {
                 { response ->
                     ///completionHandlerForSymbolNames(response)
                     SymbolsToNamesResponse = response.getJSONObject("symbols")  //namesResponse = response.getJSONObject("symbols")
+                    InitNames()
                     editor.putString("SymbolsToNamesResponse", gson.toJson(SymbolsToNamesResponse))
                     editor.commit()
                     DataLoading.setVisibility(View.GONE)
@@ -250,26 +222,18 @@ class MainActivity : AppCompatActivity() {
                 }
         ))
 
-        Currency2.text = GroupBy3(Calculate(Currency1.text.toString())) //przelicz z nowymi danymi
+        //Currency2.text = GroupBy3(Calculate(Currency1.text.toString())) //przelicz z nowymi danymi
     }
 
-    private fun MakeAdapter(){
-
-        SymbolsToNamesCollection = ConvertJsonToHash(SymbolsToNamesResponse!!)
+    private fun InitRates(){
         ratesCollection = ConvertJsonToHash(CurrencyRatesResponse!!)
         currencySymbols = ArrayList(ratesCollection.keys)
         currencySymbols.sort()
-
-        val adapter = ArrayAdapter(this, R.layout.ghost_text, currencySymbols)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        from_spinner.adapter = adapter
-        //from_spinner.setSelection(117)
-        from_spinner.setSelection(adapter.getPosition(sharedPreferences.getString("Currency1Symbol", "EUR")))
-        to_spinner.adapter = adapter
-        to_spinner.setSelection(adapter.getPosition(sharedPreferences.getString("Currency2Symbol", "PLN")))
     }
 
+    private fun InitNames(){
+        SymbolsToNamesCollection = ConvertJsonToHash(SymbolsToNamesResponse!!)
+    }
 
     private fun ConvertJsonToHash(rates: JSONObject): HashMap<String, Any>{
         val ratesHashMap: HashMap<String, Any> = hashMapOf()
@@ -295,24 +259,16 @@ class MainActivity : AppCompatActivity() {
 
         c1 = cur1.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
 
-        if(from_spinner.selectedItem != null){ //jeśli nie ma żadnych danych
-            //Timber.tag("Mik").d("Selected currency 1: "+from_spinner.selectedItem.toString())
-            //Timber.tag("Mik").d("SelectedRate 1: "+ratesCollection[from_spinner.selectedItem.toString()].toString())
-            //Timber.tag("Mik").d("Selected currency 2: "+to_spinner.selectedItem.toString())
-            //Timber.tag("Mik").d("SelectedRate 2: "+ratesCollection[to_spinner.selectedItem.toString()].toString())
-        }else{
-            //Timber.tag("Mik").d("spinner is null")
-        }
-        //Timber.tag("Mik").d(from_spinner.selectedItem.toString())
-        //Timber.tag("Mik").d(ratesCollection[from_spinner.selectedItem.toString()].toString())
-        //Timber.tag("Mik").d(c1.toString())
-
-        if(from_spinner.selectedItem == null){ //jeśli nie ma żadnych danych
+        /*if(from_spinner.selectedItem == null){ //jeśli nie ma żadnych danych
             return "0"
-        }
+        }*/
 
-        c2 = calculateEquivalent(ratesCollection[from_spinner.selectedItem.toString()]!!, ratesCollection[to_spinner.selectedItem.toString()]!!, c1)
-        //Timber.tag("Mik").d("CalculateEquivalent: "+c2.toString())
+        Timber.tag("Mik").d("ratesCollection[1]: "+ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")])
+        Timber.tag("Mik").d("Symbol1: "+sharedPreferences.getString("Currency1Symbol", "EUR"))
+        Timber.tag("Mik").d("ratesCollection[2]: "+ratesCollection[sharedPreferences.getString("Currency2Symbol", "EUR")])
+        Timber.tag("Mik").d("Symbol2: "+sharedPreferences.getString("Currency2Symbol", "EUR"))
+        c2 = calculateEquivalent(ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")]!!, ratesCollection[sharedPreferences.getString("Currency2Symbol", "USD")]!!, c1)
+        Timber.tag("Mik").d("CalculateEquivalent: "+c2.toString())
 
         if (c2 == 0.0){
             return "0"
@@ -366,7 +322,7 @@ class MainActivity : AppCompatActivity() {
                     //zostawiamy tak jak jest
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "0")
-                    Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                    updateChildCurrencies()
                 }
             }
             R.id.TS1 -> {
@@ -375,7 +331,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "1")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS2 -> {
                 if (Currency1.text.toString() == "0") {
@@ -383,7 +339,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "2")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS3 -> {
                 if (Currency1.text.toString() == "0") {
@@ -391,7 +347,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "3")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS4 -> {
                 if (Currency1.text.toString() == "0") {
@@ -399,7 +355,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "4")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS5 -> {
                 if (Currency1.text.toString() == "0") {
@@ -407,7 +363,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "5")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS6 -> {
                 if (Currency1.text.toString() == "0") {
@@ -415,7 +371,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "6")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS7 -> {
                 if (Currency1.text.toString() == "0") {
@@ -423,7 +379,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "7")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS8 -> {
                 if (Currency1.text.toString() == "0") {
@@ -431,7 +387,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "8")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TS9 -> {
                 if (Currency1.text.toString() == "0") {
@@ -439,7 +395,7 @@ class MainActivity : AppCompatActivity() {
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "9")
                 }
-                Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                updateChildCurrencies()
             }
             R.id.TSp -> {
                 //Timber.tag("Mik").d(Currency1.text.toString().contains(',').toString())
@@ -461,7 +417,7 @@ class MainActivity : AppCompatActivity() {
                     Currency2.text = "0"
                 } else {
                     Currency1.text = GroupBy3(Currency1.text.dropLast(1).toString())
-                    Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+                    updateChildCurrencies()
                 }
             }
         }
@@ -506,6 +462,80 @@ class MainActivity : AppCompatActivity() {
     fun BMenuClicked(view: View) {
         val intent = Intent(this, Menu::class.java)
         startActivity(intent)
+    }
+
+    fun Search1(view: View) {
+        val intent = Intent(this, SymbolSearch::class.java)
+        startActivityForResult(intent, 1)
+    }
+
+    fun Search2(view: View) {
+        val intent = Intent(this, SymbolSearch::class.java)
+        startActivityForResult(intent, 2)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {//Search 1 waluty
+            if (resultCode == Activity.RESULT_OK) {
+                val RetrunSymbol  = data!!.getStringExtra("Symbol")
+                Timber.tag("Mik").d("Search1 returned: "+RetrunSymbol)
+                Currency1Symbol.text=RetrunSymbol
+                if(FlagaResource(RetrunSymbol.toString()) != 0){
+                    Flaga1.setImageResource(FlagaResource(RetrunSymbol))
+                }else{
+                    Flaga1.setImageResource(R.drawable.pusta_flaga)
+                }
+                val editor = sharedPreferences.edit()
+                editor.putString("Currency1Symbol", RetrunSymbol)
+                editor.commit()
+                updateChildCurrencies() //przelicz z nowymi ustawieniami
+            }
+        }
+
+        if (requestCode == 2) {//Search 2 waluty
+            if (resultCode == Activity.RESULT_OK) {
+                val RetrunSymbol  = data!!.getStringExtra("Symbol")
+                Timber.tag("Mik").d("Search2 returned: "+RetrunSymbol)
+                Currency2Symbol.text=RetrunSymbol
+                if(FlagaResource(RetrunSymbol) != 0){
+                    Flaga2.setImageResource(FlagaResource(RetrunSymbol))
+                }else{
+                    Flaga2.setImageResource(R.drawable.pusta_flaga)
+                }
+                val editor = sharedPreferences.edit()
+                editor.putString("Currency2Symbol", RetrunSymbol)
+                editor.commit()
+                updateChildCurrencies() //przelicz z nowymi ustawieniami
+            }
+        }
+    }
+
+    private fun setFlags()
+    {
+        //Timber.tag("Mik").d("Init Currency 1: "+Currency1.text)
+        //Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+        //Timber.tag("Mik").d("Init Currency 2: "+Currency2.text)
+        val Currency1Sym = sharedPreferences.getString("Currency1Symbol", "EUR")!!
+        val Currency2Sym = sharedPreferences.getString("Currency2Symbol", "EUR") !!
+        Currency1Symbol.text = Currency1Sym
+        Currency2Symbol.text = Currency2Sym
+
+        if (FlagaResource(Currency1Sym) != 0) {
+            Flaga1.setImageResource(FlagaResource(Currency1Sym))
+        } else {
+            Flaga1.setImageResource(R.drawable.pusta_flaga)
+        }
+
+        if (FlagaResource(Currency2Sym) != 0) {
+            Flaga2.setImageResource(FlagaResource(Currency2Sym))
+        } else {
+            Flaga2.setImageResource(R.drawable.pusta_flaga)
+        }
+    }
+
+    private fun updateChildCurrencies(){
+        Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
     }
 
     public fun  LastInterstitialMin(sharepref: SharedPreferences):Int{

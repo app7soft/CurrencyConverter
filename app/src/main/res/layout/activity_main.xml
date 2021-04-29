@@ -143,6 +143,7 @@
         app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
         app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>
 
+    <!--
     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/from_spinner"
         android:layout_width="0dp"
@@ -167,7 +168,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/Currency2tlo"
         app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
-        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>
+        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>-->
+
+    <ImageView
+        android:id="@+id/Search1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="Search1"
+        app:layout_constraintStart_toStartOf="@+id/Flaga1"
+        app:layout_constraintTop_toTopOf="@+id/Flaga1"
+        app:layout_constraintEnd_toEndOf="@+id/Currency1tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Flaga1"/>
 
     <ImageView
         android:id="@+id/Flaga2"
@@ -218,6 +229,16 @@
         app:layout_constraintRight_toRightOf="@+id/Currency2tlo"
         app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
         app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>
+
+    <ImageView
+        android:id="@+id/Search2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="Search2"
+        app:layout_constraintStart_toStartOf="@+id/Flaga2"
+        app:layout_constraintTop_toTopOf="@+id/Flaga2"
+        app:layout_constraintEnd_toEndOf="@+id/Currency2tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Flaga2"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/TS7"

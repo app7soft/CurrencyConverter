@@ -1,5 +1,6 @@
 package com.app7soft.currencyconverter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app7soft.currencyconverter.MainActivity.Companion.SymbolsToNamesCollection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_list_row.view.*
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -46,12 +48,16 @@ class RecyclerView_Adapter(private var countryList: ArrayList<String>) :
         holder.itemView.Flaga.setImageResource(FlagaResource(countryFilterList[position]))
         holder.itemView.Nazwa.text = SymbolsToNamesCollection[countryFilterList[position]].toString()
 
-
         holder.itemView.setOnClickListener {
             //val intent = Intent(mcontext, DetailsActivity::class.java)
             //intent.putExtra("passselectedcountry", countryFilterList[position])
             //mcontext.startActivity(intent)
             Log.d("Selected:", countryFilterList[position])
+            val intent = Intent()
+            intent.putExtra("Symbol", countryFilterList[position])
+            (mcontext as SymbolSearch).setResult(Activity.RESULT_OK, intent)
+            Timber.tag("Mik").d("Chosen Symbol: "+countryFilterList[position])
+            (mcontext as SymbolSearch).finish()
         }
     }
 
