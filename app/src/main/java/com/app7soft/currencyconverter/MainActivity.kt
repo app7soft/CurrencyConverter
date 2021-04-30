@@ -30,25 +30,28 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        var InterstitialID = "ca-app-pub-5209961561922052/7183758786" //Real for 361
-        //var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
+        //var InterstitialID = "ca-app-pub-5209961561922052/7183758786" //Real for 361
+        var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
         lateinit var mInterstitialAd: InterstitialAd
         var AdErrorCount = 0 //próbujemy wczytywac maksymalnie 5 razy co 2 sekundy
         var ShowIntRunNumber: Int = 4 //Interstitial Reklmay pokazujemy od 4 uruchomienia
         var ShowIntMin: Int = 480 //Interstitial pokazujemy nieczęsciej niz co 480 min = 8h
         var currencySymbols: ArrayList<String> = ArrayList()
+        var SymbolsNames: ArrayList<String> = ArrayList()
         var SymbolsToNamesCollection = HashMap<String, Any>()
+        lateinit var sharedPreferences: SharedPreferences
     }
 
     private var CurrencyRatesResponse: JSONObject? = null //Obecne kursy walut zwócone przez API
     private var SymbolsToNamesResponse: JSONObject? = null //Mapowanie symboli na pełna Nazwe waluty zwócone przez API
     //private var SymbolsToNamesCollection = HashMap<String, Any>()
     private var ratesCollection = HashMap<String, Any>()
-    lateinit var sharedPreferences: SharedPreferences
+    //lateinit var sharedPreferences: SharedPreferences
     var MaxLength: Int = 17
     var RatesUpdateOnStart: Boolean = true
     var gson = Gson()
     var json: String? ="" //temporary string to convert gson.JsonObject to JSONObject
+    var CurrentCurrency: String =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar)
@@ -63,11 +66,14 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
+        val CurrentCountry = resources.configuration.locale
+        CurrentCurrency = Currency.getInstance(CurrentCountry).currencyCode
+
+        //Timber.tag("Mik").d(Currency.getInstance("LLL").getDisplayName())
+
         if(!sharedPreferences.contains("RunNumber")){
-            val CurrentCountry = resources.configuration.locale
-            val CurrentCurrency = Currency.getInstance(CurrentCountry).currencyCode
             Timber.tag("Mik").d("APLIKACJA URUCHOMIONA PIERWSZY RAZ....")
-            Timber.tag("Mik").d("Currency code: "+CurrentCurrency)
+            //Timber.tag("Mik").d("Currency code: "+CurrentCurrency)
             editor.putInt("RunNumber", 1)
             editor.putString("LastUpdate", " rates no updated yet")
             editor.putString("Currency1Symbol", CurrentCurrency)
@@ -161,18 +167,16 @@ class MainActivity : AppCompatActivity() {
         val urlCurrencyRates = "http://data.fixer.io/api/latest?access_key=7ce1c2205caeba66fbc17e38b3767be5"
         val urlCurrencySymbols = "http://data.fixer.io/api/symbols?access_key=7ce1c2205caeba66fbc17e38b3767be5"
 
-        Timber.tag("Mik").d("jestem1")
-
         MySingleton.getInstance(this).addToRequestQueue(JsonObjectRequest(Request.Method.GET,
                 urlCurrencyRates,
                 null,
                 { response ->
-                    Timber.tag("Mik").d(response.toString())
+                    //Timber.tag("Mik").d(response.toString())
                     /*timestamp = response.getLong("timestamp")
                     val dt = Instant.ofEpochSecond(timestamp)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDateTime()*/
-                    Timber.tag("Mik").d("responseOK")
+                    //Timber.tag("Mik").d("responseOK")
                     val sdf = SimpleDateFormat("d MMM yyyy HH:mm")
                     val currentDate = sdf.format(Date())
                     RefreshDate.text = getString(R.string.LastUpdate) + " " + currentDate
@@ -183,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                     editor.putString("CurrencyRatesResponse", gson.toJson(CurrencyRatesResponse))
                     editor.commit()
                     RatesUpdateOnStart = false
-                    Timber.tag("Mik").d("CurrencyRatesResponse:"+CurrencyRatesResponse.toString())
+                    //Timber.tag("Mik").d("CurrencyRatesResponse:"+CurrencyRatesResponse.toString())
                     InitRates()
                     updateChildCurrencies() //przelicz z nowymi danymi
                     //Timber.tag("Mik").d("CurrencyRatesResponse:"+CurrencyRatesResponse.toString())
@@ -191,7 +195,7 @@ class MainActivity : AppCompatActivity() {
 
                 },
                 {
-                    Timber.tag("Mik").d("response Not OK")
+                    //Timber.tag("Mik").d("response Not OK")
                     RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
                     if ((RatesUpdateOnStart == false) or (sharedPreferences.getInt("RunNumber", 0) == 1)) {
                         //Timber.tag("Mik").d(RatesUpdateOnStart.toString())
@@ -202,7 +206,6 @@ class MainActivity : AppCompatActivity() {
                     //jeśli sie nie ma internetu to pobieramy ostatnie waluty które były
                 }
         ))
-        Timber.tag("Mik").d("jestem3")
 
         MySingleton.getInstance(this).addToRequestQueue(JsonObjectRequest(Request.Method.GET,
                 urlCurrencySymbols,
@@ -222,17 +225,51 @@ class MainActivity : AppCompatActivity() {
                 }
         ))
 
-        //Currency2.text = GroupBy3(Calculate(Currency1.text.toString())) //przelicz z nowymi danymi
     }
 
     private fun InitRates(){
         ratesCollection = ConvertJsonToHash(CurrencyRatesResponse!!)
         currencySymbols = ArrayList(ratesCollection.keys)
         currencySymbols.sort()
+        //Timber.tag("Mik").d("CurrentCurrency: "+CurrentCurrency)
+        //usuwam najpopularniejsze symbole żeby dodac je jeszcze raz
+        //CurrentCurrency="EUR"
+        if(CurrentCurrency !in arrayListOf("USD", "EUR","JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "BTC")){
+            currencySymbols.removeAt(currencySymbols.indexOf(CurrentCurrency))
+        }
+        currencySymbols.removeAt(currencySymbols.indexOf("USD"))
+        currencySymbols.removeAt(currencySymbols.indexOf("EUR"))
+        currencySymbols.removeAt(currencySymbols.indexOf("JPY"))
+        currencySymbols.removeAt(currencySymbols.indexOf("GBP"))
+        currencySymbols.removeAt(currencySymbols.indexOf("AUD"))
+        currencySymbols.removeAt(currencySymbols.indexOf("CAD"))
+        currencySymbols.removeAt(currencySymbols.indexOf("CHF"))
+        currencySymbols.removeAt(currencySymbols.indexOf("CNY"))
+        currencySymbols.removeAt(currencySymbols.indexOf("BTC"))
+        //Timber.tag("Mik").d("Currency Symbol Before: "+currencySymbols.toString())
+        currencySymbols.addAll(0, listOf("USD", "EUR","JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "BTC"))
+        if(CurrentCurrency !in arrayListOf("USD", "EUR","JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "BTC")){
+            currencySymbols.add(0, CurrentCurrency)
+        }
+        //Timber.tag("Mik").d("Currency Symbol After: "+currencySymbols.toString())
     }
 
     private fun InitNames(){
         SymbolsToNamesCollection = ConvertJsonToHash(SymbolsToNamesResponse!!)
+        //Timber.tag("Mik").d(SymbolsToNamesCollection.toString())
+        for ((key, value) in SymbolsToNamesCollection) {
+            val sym = Currency.getInstance(key).getDisplayName()
+            if(key != sym){
+                SymbolsToNamesCollection[key] = Currency.getInstance(key).getDisplayName()
+            }
+        }
+        //Timber.tag("Mik").d(SymbolsToNamesCollection.toString())
+
+        for (row in SymbolsToNamesCollection.values) {
+            SymbolsNames.add(row.toString())
+        }
+        //Timber.tag("Mik").d(SymbolsToNamesCollection.values.toString())
+        //Timber.tag("Mik").d("SymbolsNames: "+SymbolsNames.toString())
     }
 
     private fun ConvertJsonToHash(rates: JSONObject): HashMap<String, Any>{
@@ -263,12 +300,12 @@ class MainActivity : AppCompatActivity() {
             return "0"
         }*/
 
-        Timber.tag("Mik").d("ratesCollection[1]: "+ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")])
-        Timber.tag("Mik").d("Symbol1: "+sharedPreferences.getString("Currency1Symbol", "EUR"))
-        Timber.tag("Mik").d("ratesCollection[2]: "+ratesCollection[sharedPreferences.getString("Currency2Symbol", "EUR")])
-        Timber.tag("Mik").d("Symbol2: "+sharedPreferences.getString("Currency2Symbol", "EUR"))
+        //Timber.tag("Mik").d("ratesCollection[1]: "+ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")])
+        //Timber.tag("Mik").d("Symbol1: "+sharedPreferences.getString("Currency1Symbol", "EUR"))
+        //Timber.tag("Mik").d("ratesCollection[2]: "+ratesCollection[sharedPreferences.getString("Currency2Symbol", "EUR")])
+        //Timber.tag("Mik").d("Symbol2: "+sharedPreferences.getString("Currency2Symbol", "EUR"))
         c2 = calculateEquivalent(ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")]!!, ratesCollection[sharedPreferences.getString("Currency2Symbol", "USD")]!!, c1)
-        Timber.tag("Mik").d("CalculateEquivalent: "+c2.toString())
+        //Timber.tag("Mik").d("CalculateEquivalent: "+c2.toString())
 
         if (c2 == 0.0){
             return "0"
@@ -479,7 +516,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 1) {//Search 1 waluty
             if (resultCode == Activity.RESULT_OK) {
                 val RetrunSymbol  = data!!.getStringExtra("Symbol")
-                Timber.tag("Mik").d("Search1 returned: "+RetrunSymbol)
+                //Timber.tag("Mik").d("Search1 returned: "+RetrunSymbol)
                 Currency1Symbol.text=RetrunSymbol
                 if(FlagaResource(RetrunSymbol.toString()) != 0){
                     Flaga1.setImageResource(FlagaResource(RetrunSymbol))
@@ -496,7 +533,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 2) {//Search 2 waluty
             if (resultCode == Activity.RESULT_OK) {
                 val RetrunSymbol  = data!!.getStringExtra("Symbol")
-                Timber.tag("Mik").d("Search2 returned: "+RetrunSymbol)
+                //Timber.tag("Mik").d("Search2 returned: "+RetrunSymbol)
                 Currency2Symbol.text=RetrunSymbol
                 if(FlagaResource(RetrunSymbol) != 0){
                     Flaga2.setImageResource(FlagaResource(RetrunSymbol))
@@ -534,6 +571,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun swap(v: View) {
+        val editor = sharedPreferences.edit()
+        val c1 = sharedPreferences.getString("Currency1Symbol", "EUR")
+        val c2 = sharedPreferences.getString("Currency2Symbol", "EUR")
+        editor.putString("Currency1Symbol", c2)
+        editor.putString("Currency2Symbol", c1)
+        editor.commit()
+        setFlags()
+        Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+    }
+
     private fun updateChildCurrencies(){
         Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
     }
@@ -541,18 +589,18 @@ class MainActivity : AppCompatActivity() {
     public fun  LastInterstitialMin(sharepref: SharedPreferences):Int{
         val date1 = sharepref.getLong("InterstitialTime", 0)
         if(date1.toInt() == 0){
-            Timber.tag("Mik").d("LastInterstitialMin: 6000")
+            //Timber.tag("Mik").d("LastInterstitialMin: 6000")
             return 6000 //Jeśli nie było jeszcze wyswietlenia to trkatujemy jakby mineło 6000 min
         } else {
             val diff = Date().getTime()-date1
             val seconds = diff / 1000
             val minutes = seconds / 60
-            Timber.tag("Mik").d("LastInterstitialMin: "+minutes.toInt().toString())
+            //Timber.tag("Mik").d("LastInterstitialMin: "+minutes.toInt().toString())
             return minutes.toInt()
         }
     }
 
-    fun showAdd(){
+    public fun showAdd(){
        if (sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && MainActivity().LastInterstitialMin(sharedPreferences) >= MainActivity.ShowIntMin){
             if (mInterstitialAd.isLoaded) {
                 mInterstitialAd.show()

@@ -131,6 +131,24 @@
         app:layout_constraintVertical_bias="0.7"
         app:layout_constraintWidth_percent="0.6" />
 
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/drop_down"
+        app:layout_constraintWidth_percent="0.07"
+        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
+        app:layout_constraintEnd_toStartOf="@+id/Currency1tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/drop_down"
+        app:layout_constraintWidth_percent="0.07"
+        app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
+        app:layout_constraintEnd_toStartOf="@+id/Currency2tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>
+
     <TextView
         android:id="@+id/Currency1"
         android:layout_width="wrap_content"
@@ -279,14 +297,41 @@
         app:layout_constraintEnd_toStartOf="@+id/C"
         app:layout_constraintStart_toEndOf="@+id/TS8" />
 
+    <ImageButton
+        android:id="@+id/Swap"
+        style="@style/Buttons"
+        android:background="@drawable/buttons_orange"
+        android:textColor="#ffffff"
+        android:onClick="swap"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/TS9"
+        app:layout_constraintBottom_toBottomOf="@+id/TS9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/TS9" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        app:layout_constraintHeight_percent="0.090"
+        app:layout_constraintWidth_percent="0.12"
+        app:layout_constraintStart_toStartOf="@+id/Swap"
+        app:layout_constraintTop_toTopOf="@+id/Swap"
+        app:layout_constraintEnd_toEndOf="@+id/Swap"
+        app:layout_constraintBottom_toBottomOf="@+id/Swap"
+        app:srcCompat="@drawable/swap" />
+
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/C"
-        style="@style/ButtonsC"
+        style="@style/Buttons"
         android:background="@drawable/buttons_orange"
         android:onClick="Convert"
         android:text="C"
+        android:textColor="#ffffff"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="@+id/TS9"
+        app:layout_constraintTop_toTopOf="@+id/TS6"
         app:layout_constraintBottom_toBottomOf="@+id/TS6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/TS9" />

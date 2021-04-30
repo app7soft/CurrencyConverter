@@ -9,13 +9,13 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.View
 import com.app7soft.currencyconverter.MainActivity.Companion.mInterstitialAd
+import com.app7soft.currencyconverter.MainActivity.Companion.sharedPreferences
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_menu.*
 import timber.log.Timber
 
 class Menu : AppCompatActivity() {
-    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar)
@@ -24,7 +24,6 @@ class Menu : AppCompatActivity() {
         version.text = "Version " + BuildConfig.VERSION_NAME.toString()
         App7Soft.setMovementMethod(LinkMovementMethod.getInstance())
         adViewMenu.loadAd(AdRequest.Builder().build())
-        sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
     }
 
     fun BInfoClicked(view: View) {
@@ -41,9 +40,12 @@ class Menu : AppCompatActivity() {
     }
 
     fun BShareClicked(view: View) {
-        val intent = Intent(this, SymbolSearch::class.java)
-        startActivity(intent)
-        finish()
+        val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+        sharingIntent.type = "text/plain"
+        val shareBody = "https://play.google.com/store/apps/details?id=com.app7soft.currencyconverter"
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+        startActivity(Intent.createChooser(sharingIntent, ""))
     }
 
     fun back(view: View) {
