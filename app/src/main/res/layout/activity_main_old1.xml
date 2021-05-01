@@ -58,6 +58,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline50bottom" />
 
+
     <TextView
         android:id="@+id/RefreshDate"
         android:layout_width="wrap_content"
@@ -247,67 +248,6 @@
         app:layout_constraintEnd_toEndOf="@+id/Search2"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/plus"
-        style="@style/Kalkulator"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:layout_marginRight="@dimen/_5sdp"
-        android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
-        android:text="+"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintEnd_toStartOf="@+id/minus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tlo" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/minus"
-        style="@style/Kalkulator"
-        android:layout_marginRight="@dimen/_5sdp"
-        android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
-        android:text="-"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="@+id/plus"
-        app:layout_constraintStart_toEndOf="@+id/plus"
-        app:layout_constraintEnd_toStartOf="@+id/razy" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/razy"
-        style="@style/Kalkulator"
-        android:layout_marginRight="@dimen/_5sdp"
-        android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
-        android:text="x"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="@+id/plus"
-        app:layout_constraintStart_toEndOf="@+id/minus"
-        app:layout_constraintEnd_toStartOf="@+id/dziel" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/dziel"
-        style="@style/Kalkulator"
-        android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
-        android:text="%"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="@+id/plus"
-        app:layout_constraintStart_toEndOf="@+id/razy"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!--<androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/wynik"
-        style="@style/Kalkulator"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:background="@drawable/buttons"
-        android:onClick="Convert"
-        android:text="="
-        app:layout_constraintTop_tTopOf="@id/dziel"
-        app:layout_constraintBottom_toBottomOf="@+id/tlo"
-        app:layout_constraintStart_toEndOf="@+id/dziel"
-        app:layout_constraintEnd_toEndOf="@+id/Swap" />-->
-
-
-    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/TS7"
         style="@style/Buttons"
         android:layout_marginTop="@dimen/_4sdp"
@@ -315,38 +255,36 @@
         android:background="@drawable/buttons"
         android:onClick="Convert"
         android:text="7"
-        app:layout_constraintTop_toBottomOf="@+id/plus"
-        app:layout_constraintStart_toStartOf="@id/plus" />
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/tlo"
+        app:layout_constraintEnd_toStartOf="@+id/TS8"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/TS8"
         style="@style/Buttons"
+        android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
         android:onClick="Convert"
         android:text="8"
-        app:layout_constraintTop_toTopOf="@+id/TS7"
-        app:layout_constraintStart_toStartOf="@+id/minus" />
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/tlo"
+        app:layout_constraintEnd_toStartOf="@+id/TS9"
+        app:layout_constraintStart_toEndOf="@+id/TS7" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/TS9"
         style="@style/Buttons"
+        android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
         android:onClick="Convert"
         android:text="9"
-        app:layout_constraintTop_toTopOf="@+id/TS7"
-        app:layout_constraintStart_toStartOf="@+id/razy" />
-
-    <androidx.appcompat.widget.AppCompatButton
-       android:id="@+id/wynik"
-       style="@style/Buttons"
-       android:background="@drawable/buttons_orange"
-       android:onClick="Convert"
-       android:text="="
-        android:textColor="#ffffff"
-       app:layout_constraintTop_toTopOf="@+id/TS7"
-       app:layout_constraintStart_toStartOf="@+id/dziel" />
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/tlo"
+        app:layout_constraintEnd_toStartOf="@+id/C"
+        app:layout_constraintStart_toEndOf="@+id/TS8" />
 
     <ImageButton
         android:id="@+id/Swap"
@@ -354,8 +292,11 @@
         android:background="@drawable/buttons_orange"
         android:textColor="#ffffff"
         android:onClick="swap"
-        app:layout_constraintTop_toTopOf="@+id/TS6"
-        app:layout_constraintStart_toStartOf="@+id/wynik" />
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/TS9"
+        app:layout_constraintBottom_toBottomOf="@+id/TS9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/TS9" />
 
     <ImageView
         android:layout_width="0dp"
@@ -379,19 +320,21 @@
         android:text="C"
         android:textColor="#ffffff"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="@+id/TS3"
+        app:layout_constraintTop_toTopOf="@+id/TS6"
+        app:layout_constraintBottom_toBottomOf="@+id/TS6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/TS3" />
+        app:layout_constraintStart_toEndOf="@+id/TS9" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/TS4"
         style="@style/Buttons"
         android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
         android:onClick="Convert"
         android:text="4"
         app:layout_constraintTop_toBottomOf="@+id/TS7"
-        app:layout_constraintStart_toStartOf="@id/plus" />
+        app:layout_constraintStart_toStartOf="@+id/TS7" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/TS5"
@@ -448,10 +391,9 @@
         android:text="3"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toTopOf="@+id/TS1"
-        app:layout_constraintEnd_toStartOf="@+id/C"
+        app:layout_constraintEnd_toStartOf="@+id/Del"
         app:layout_constraintStart_toEndOf="@+id/TS2" />
 
-    <!--
     <ImageButton
         android:id="@+id/Del"
         style="@style/Buttons"
@@ -462,7 +404,6 @@
         app:layout_constraintTop_toTopOf="@+id/TS3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/TS3" />
-        -->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/TS0"
@@ -553,6 +494,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.50" />
+        app:layout_constraintGuide_percent="0.61" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

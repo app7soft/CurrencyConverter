@@ -296,10 +296,6 @@ class MainActivity : AppCompatActivity() {
 
         c1 = cur1.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
 
-        /*if(from_spinner.selectedItem == null){ //jeśli nie ma żadnych danych
-            return "0"
-        }*/
-
         //Timber.tag("Mik").d("ratesCollection[1]: "+ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")])
         //Timber.tag("Mik").d("Symbol1: "+sharedPreferences.getString("Currency1Symbol", "EUR"))
         //Timber.tag("Mik").d("ratesCollection[2]: "+ratesCollection[sharedPreferences.getString("Currency2Symbol", "EUR")])
@@ -310,7 +306,7 @@ class MainActivity : AppCompatActivity() {
         if (c2 == 0.0){
             return "0"
         }
-        else if(c2>=1){ //lub Waluta
+        else if(c2>=0.01){ //lub Waluta
             str = String.format("%.2f", c2)
             if (str.takeLast(1)=="0"){
                 str=str.dropLast(1)
@@ -579,11 +575,12 @@ class MainActivity : AppCompatActivity() {
         editor.putString("Currency2Symbol", c1)
         editor.commit()
         setFlags()
-        Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+        updateChildCurrencies()
     }
 
     private fun updateChildCurrencies(){
         Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+        Kurs.text = "1 "+sharedPreferences.getString("Currency1Symbol", "EUR")+" = "+Calculate("1")+" "+sharedPreferences.getString("Currency2Symbol", "EUR")
     }
 
     public fun  LastInterstitialMin(sharepref: SharedPreferences):Int{
