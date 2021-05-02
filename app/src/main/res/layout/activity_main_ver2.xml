@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MainBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/WhiteSpace"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#ffffff"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--android:background="#3DB782"-->
+    <ImageView
+        android:id="@+id/TloMenu"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_38sdp"
+        android:background="#68A519"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/WhiteSpace" />
+
+    <TextView
+        android:id="@+id/MyCurrency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MyCurrency"
+        android:fontFamily="@font/circular_pro_medium"
+        android:text="@string/MyCurrency"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TloMenu"
+        app:layout_constraintBottom_toBottomOf="@+id/TloMenu"/>
+
+    <ImageView
+        android:id="@+id/TloLastUpdate"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_20sdp"
+        android:background="#BEC5D1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TloMenu" />
+
+    <ImageView
+        android:id="@+id/tlo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#BCBCBC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline50bottom" />
+
+    <TextView
+        android:id="@+id/RefreshDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/RefreshDate"
+        android:fontFamily="@font/circular_pro_medium"
+        android:text="@string/UpdatingRates"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TloLastUpdate"
+        app:layout_constraintBottom_toBottomOf="@+id/TloLastUpdate"/>
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:onClick="BMenuClicked"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TloMenu"
+        app:layout_constraintWidth_percent="0.15"/>
+
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="@dimen/_10sdp"
+        app:layout_constraintHeight_percent="0.038"
+        app:layout_constraintWidth_percent="0.067"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TloMenu"
+        app:layout_constraintBottom_toBottomOf="@+id/TloMenu"
+        app:srcCompat="@drawable/menu" />
+
+    <ImageButton
+        android:id="@+id/refresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:onClick="BMenuClicked"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TloMenu"
+        app:layout_constraintWidth_percent="0.15"/>
+
+    <ImageView
+        android:id="@+id/refres"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/_10sdp"
+        app:layout_constraintHeight_percent="0.04"
+        app:layout_constraintWidth_percent="0.08"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/TloMenu"
+        app:layout_constraintBottom_toBottomOf="@+id/TloMenu"
+        app:srcCompat="@drawable/sync" />
+
+
+
+    <ImageView
+        android:id="@+id/Currency1tlo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/input_currency_main"
+        android:layout_marginTop="@dimen/_15sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHeight_percent="0.11"
+        app:layout_constraintTop_toBottomOf="@+id/TloLastUpdate"
+        app:layout_constraintWidth_percent="0.95" />
+
+    <ImageView
+        android:id="@+id/Currency2tlo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/input_currency"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHeight_percent="0.11"
+        app:layout_constraintTop_toBottomOf="@+id/Currency1tlo"
+        app:layout_constraintWidth_percent="0.95" />
+
+    <ImageView
+        android:id="@+id/Flaga1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/_3sdp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"
+        app:layout_constraintHeight_percent="0.058"
+        app:layout_constraintStart_toStartOf="@+id/Currency1tlo"
+        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
+        app:layout_constraintWidth_percent="0.13"
+        app:srcCompat="@drawable/eur" />
+
+    <ImageView
+        android:id="@+id/Flaga2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/usd"
+        android:layout_marginLeft="@dimen/_3sdp"
+        app:layout_constraintHeight_percent="0.058"
+        app:layout_constraintWidth_percent="0.13"
+        app:layout_constraintStart_toStartOf="@+id/Currency2tlo"
+        app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo" />
+
+    <TextView
+        android:id="@+id/Currency1Symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_1sdp"
+        style="@style/CurrencySymbol"
+        android:fontFamily="@font/circular_pro_medium"
+        android:text="EUR"
+        app:layout_constraintStart_toEndOf="@+id/Flaga1"
+        app:layout_constraintTop_toTopOf="@+id/Flaga1"
+        app:layout_constraintBottom_toBottomOf="@+id/Flaga1"/>
+
+
+    <!--<ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/drop_down"
+        app:layout_constraintWidth_percent="0.07"
+        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
+        app:layout_constraintEnd_toStartOf="@+id/Currency1tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>-->
+
+    <!--<ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/drop_down"
+        app:layout_constraintWidth_percent="0.07"
+        app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
+        app:layout_constraintEnd_toStartOf="@+id/Currency2tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>-->
+
+    <TextView
+        android:id="@+id/Currency1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/_5sdp"
+        style="@style/Currency"
+        android:fontFamily="@font/circular_pro_medium"
+        android:text="100 000"
+        app:layout_constraintRight_toRightOf="@+id/Currency1tlo"
+        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>
+
+
+    <ImageView
+        android:id="@+id/Search1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="Search1"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"
+        app:layout_constraintEnd_toEndOf="@+id/Currency1tlo"
+        app:layout_constraintStart_toStartOf="@+id/Currency1tlo"
+        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/Currency2Symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_1sdp"
+        style="@style/CurrencySymbol"
+        android:fontFamily="@font/circular_pro_medium"
+        android:text="USD"
+        app:layout_constraintStart_toEndOf="@+id/Flaga2"
+        app:layout_constraintTop_toTopOf="@+id/Flaga2"
+        app:layout_constraintBottom_toBottomOf="@+id/Flaga2"/>
+
+    <TextView
+        android:id="@+id/Currency2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/_5sdp"
+        style="@style/Currency"
+        android:fontFamily="@font/circular_pro_medium"
+        android:text="123 456,34"
+        app:layout_constraintRight_toRightOf="@+id/Currency2tlo"
+        app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>
+
+    <ImageView
+        android:id="@+id/Search2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="Search2"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"
+        app:layout_constraintEnd_toEndOf="@+id/Currency2tlo"
+        app:layout_constraintStart_toStartOf="@+id/Currency2tlo"
+        app:layout_constraintTop_toTopOf="@+id/Currency2tlo"/>
+
+    <TextView
+        android:id="@+id/Kurs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1 EUR = 1,42 USD"
+        style="@style/Kurs"
+        android:layout_marginTop="@dimen/_1sdp"
+        android:layout_marginRight="@dimen/_2sdp"
+        app:layout_constraintTop_toBottomOf="@+id/Search2"
+        app:layout_constraintEnd_toEndOf="@+id/Search2"/>
+
+    <!--<TextView
+        android:id="@+id/Currency1Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="euro"
+        style="@style/Kurs"
+        android:layout_marginLeft="@dimen/_2sdp"
+        app:layout_constraintTop_toBottomOf="@+id/Search1"
+        app:layout_constraintStart_toStartOf="@+id/Search1"/>
+
+    <TextView
+        android:id="@+id/Currency2Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dolar amerykański"
+        style="@style/Kurs"
+        android:layout_marginLeft="@dimen/_2sdp"
+        app:layout_constraintTop_toBottomOf="@+id/Search2"
+        app:layout_constraintStart_toStartOf="@+id/Search2"/>
+        -->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/plus"
+        style="@style/Kalkulator"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons_calc"
+        android:onClick="Convert"
+        android:text="+"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintEnd_toStartOf="@+id/minus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tlo" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/minus"
+        style="@style/Kalkulator"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons_calc"
+        android:onClick="Convert"
+        android:text="-"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/plus"
+        app:layout_constraintStart_toEndOf="@+id/plus"
+        app:layout_constraintEnd_toStartOf="@+id/razy" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/razy"
+        style="@style/Kalkulator"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons_calc"
+        android:onClick="Convert"
+        android:text="x"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/plus"
+        app:layout_constraintStart_toEndOf="@+id/minus"
+        app:layout_constraintEnd_toStartOf="@+id/dziel" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dziel"
+        style="@style/Kalkulator"
+        android:background="@drawable/buttons_calc"
+        android:onClick="Convert"
+        android:text="%"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/plus"
+        app:layout_constraintStart_toEndOf="@+id/razy"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!--<androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/wynik"
+        style="@style/Kalkulator"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="="
+        app:layout_constraintTop_tTopOf="@id/dziel"
+        app:layout_constraintBottom_toBottomOf="@+id/tlo"
+        app:layout_constraintStart_toEndOf="@+id/dziel"
+        app:layout_constraintEnd_toEndOf="@+id/Swap" />-->
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS7"
+        style="@style/Buttons"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="7"
+        app:layout_constraintTop_toBottomOf="@+id/plus"
+        app:layout_constraintStart_toStartOf="@id/plus" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS8"
+        style="@style/Buttons"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="8"
+        app:layout_constraintTop_toTopOf="@+id/TS7"
+        app:layout_constraintStart_toStartOf="@+id/minus" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS9"
+        style="@style/Buttons"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="9"
+        app:layout_constraintTop_toTopOf="@+id/TS7"
+        app:layout_constraintStart_toStartOf="@+id/razy" />
+
+    <!--
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/wynik"
+        style="@style/Buttons"
+        android:background="@drawable/buttons_orange"
+        android:onClick="Convert"
+        android:text="="
+        android:textColor="#ffffff"
+        app:layout_constraintTop_toTopOf="@+id/TS7"
+        app:layout_constraintStart_toStartOf="@+id/dziel" />-->
+
+    <ImageButton
+        android:id="@+id/Swap"
+        style="@style/Buttons"
+        android:background="@drawable/buttons_orange"
+        android:textColor="#ffffff"
+        android:onClick="swap"
+        app:layout_constraintTop_toTopOf="@+id/TS7"
+        app:layout_constraintStart_toStartOf="@+id/dziel" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        app:layout_constraintHeight_percent="0.090"
+        app:layout_constraintWidth_percent="0.12"
+        app:layout_constraintStart_toStartOf="@+id/Swap"
+        app:layout_constraintTop_toTopOf="@+id/Swap"
+        app:layout_constraintEnd_toEndOf="@+id/Swap"
+        app:layout_constraintBottom_toBottomOf="@+id/Swap"
+        app:srcCompat="@drawable/swap" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/C"
+        style="@style/Buttons"
+        android:background="@drawable/buttons_orange"
+        android:onClick="Convert"
+        android:text="C"
+        android:textColor="#ffffff"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/TS6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/TS6" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS4"
+        style="@style/Buttons"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="4"
+        app:layout_constraintTop_toBottomOf="@+id/TS7"
+        app:layout_constraintStart_toStartOf="@id/plus" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS5"
+        style="@style/Buttons"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="5"
+        app:layout_constraintTop_toTopOf="@+id/TS4"
+        app:layout_constraintStart_toStartOf="@+id/TS8"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS6"
+        style="@style/Buttons"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="6"
+        app:layout_constraintTop_toTopOf="@+id/TS4"
+        app:layout_constraintStart_toStartOf="@+id/TS9"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS1"
+        style="@style/Buttons"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="1"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@+id/TS4"
+        app:layout_constraintEnd_toStartOf="@+id/TS2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS2"
+        style="@style/Buttons"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="2"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/TS1"
+        app:layout_constraintEnd_toStartOf="@+id/TS3"
+        app:layout_constraintStart_toEndOf="@+id/TS1" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS3"
+        style="@style/Buttons"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="3"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/TS1"
+        app:layout_constraintEnd_toStartOf="@+id/Del"
+        app:layout_constraintStart_toEndOf="@+id/TS2" />
+
+
+    <ImageButton
+        android:id="@+id/Del"
+        style="@style/Buttons"
+        android:background="@drawable/buttons_orange"
+        android:onClick="Convert"
+        android:text="Del"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@+id/TS3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/TS3" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TS0"
+        style="@style/Button0"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text="0"
+        app:layout_constraintTop_toBottomOf="@+id/TS1"
+        app:layout_constraintStart_toStartOf="@+id/TS1"
+        app:layout_constraintEnd_toEndOf="@+id/TS2"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/TSp"
+        style="@style/Buttons"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:background="@drawable/buttons"
+        android:onClick="Convert"
+        android:text=","
+        app:layout_constraintTop_toTopOf="@+id/TS0"
+        app:layout_constraintStart_toStartOf="@+id/TS3"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/wynik"
+        style="@style/Buttons"
+        android:background="@drawable/button_grey"
+        android:text="="
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/TS3"
+        app:layout_constraintTop_toTopOf="@+id/TSp" />
+
+
+
+    <ImageView
+        android:id="@+id/del"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        app:layout_constraintHeight_percent="0.060"
+        app:layout_constraintWidth_percent="0.1"
+        app:layout_constraintStart_toStartOf="@+id/Del"
+        app:layout_constraintTop_toTopOf="@+id/Del"
+        app:layout_constraintEnd_toEndOf="@+id/Del"
+        app:layout_constraintBottom_toBottomOf="@+id/Del"
+        app:srcCompat="@drawable/del" />
+
+    <ProgressBar
+        android:id="@+id/DataLoading"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/RefreshDate"
+        app:layout_constraintStart_toEndOf="@+id/RefreshDate"
+        app:layout_constraintTop_toTopOf="@+id/RefreshDate"
+        app:layout_constraintHeight_percent="0.03"
+        app:layout_constraintWidth_percent="0.05"/>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layerType="software"
+        app:adSize="BANNER"
+        app:adUnitId="@string/banner_ad_unit_id"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline50bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.52" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

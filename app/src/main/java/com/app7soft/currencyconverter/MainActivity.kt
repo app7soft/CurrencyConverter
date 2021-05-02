@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             Timber.uprootAll()
             Timber.plant(Timber.DebugTree())
         }
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_ver2)
         DataLoading.setVisibility(View.GONE)
 
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
@@ -305,6 +305,10 @@ class MainActivity : AppCompatActivity() {
 
         if (c2 == 0.0){
             return "0"
+        }else if (c2 > 999999999){
+            str = String.format("%.0f", c2)
+        }else if (c2 > 99999999){
+            str = String.format("%.1f", c2)
         }
         else if(c2>=0.01){ //lub Waluta
             str = String.format("%.2f", c2)
