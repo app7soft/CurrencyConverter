@@ -9,9 +9,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.TextViewCompat
+import androidx.core.widget.doAfterTextChanged
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.*
@@ -20,6 +25,17 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.Currency1
+import kotlinx.android.synthetic.main.activity_main.Currency1Symbol
+import kotlinx.android.synthetic.main.activity_main.Currency2
+import kotlinx.android.synthetic.main.activity_main.Currency2Symbol
+import kotlinx.android.synthetic.main.activity_main.DataLoading
+import kotlinx.android.synthetic.main.activity_main.Flaga1
+import kotlinx.android.synthetic.main.activity_main.Flaga2
+import kotlinx.android.synthetic.main.activity_main.Kurs
+import kotlinx.android.synthetic.main.activity_main.RefreshDate
+import kotlinx.android.synthetic.main.activity_main.adViewMain
+import net.objecthunter.exp4j.ExpressionBuilder
 import org.json.JSONObject
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -47,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     //private var SymbolsToNamesCollection = HashMap<String, Any>()
     private var ratesCollection = HashMap<String, Any>()
     //lateinit var sharedPreferences: SharedPreferences
-    var MaxLength: Int = 17
+    var MaxLength: Int = 19
     var RatesUpdateOnStart: Boolean = true
     var gson = Gson()
     var json: String? ="" //temporary string to convert gson.JsonObject to JSONObject
@@ -60,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             Timber.uprootAll()
             Timber.plant(Timber.DebugTree())
         }
-        setContentView(R.layout.activity_main_ver2)
+        setContentView(R.layout.activity_main)
         DataLoading.setVisibility(View.GONE)
 
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
@@ -155,6 +171,37 @@ class MainActivity : AppCompatActivity() {
 
         //initInterstitialAds(sharedPreferences)
         initDatabaseData()  //zczytujemy dane z Bazy Danych Firebase
+
+        //Currency1.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen._30ssp))
+        Currency1.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                //Timber.tag("Mik").d("ilosc znakow: "+count)
+                Currency1.setTextSize(TypedValue.COMPLEX_UNIT_PX, CurrencySize(count))
+            }
+        })
+
+        Currency2.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                Timber.tag("Mik").d("ilosc znakow text 2: "+count)
+                Currency2.setTextSize(TypedValue.COMPLEX_UNIT_PX, CurrencySize(count))
+            }
+        })
     }
 
     private fun getRequest() {
@@ -357,7 +404,10 @@ class MainActivity : AppCompatActivity() {
             R.id.TS0 -> {
                 if (Currency1.text.toString() == "0") {
                     //zostawiamy tak jak jest
-                } else if (Currency1.text.length < MaxLength) {
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"0"
+                }
+                else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "0")
                     updateChildCurrencies()
                 }
@@ -365,78 +415,108 @@ class MainActivity : AppCompatActivity() {
             R.id.TS1 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "1"
-                } else if (Currency1.text.length < MaxLength) {
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Timber.tag("Mik").d( "Contan +")
+                    Currency1.text = Currency1.text.toString()+"1"
+                }else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "1")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS2 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "2"
-                } else if (Currency1.text.length < MaxLength) {
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"2"
+                }else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "2")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS3 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "3"
-                } else if (Currency1.text.length < MaxLength) {
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"3"
+                }else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "3")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS4 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "4"
-                } else if (Currency1.text.length < MaxLength) {
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"4"
+                }else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "4")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS5 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "5"
-                } else if (Currency1.text.length < MaxLength) {
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"5"
+                }else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "5")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS6 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "6"
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"6"
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "6")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS7 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "7"
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"6"
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "7")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS8 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "8"
-                } else if (Currency1.text.length < MaxLength) {
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"6"
+                }else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "8")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TS9 -> {
                 if (Currency1.text.toString() == "0") {
                     Currency1.text = "9"
-                } else if (Currency1.text.length < MaxLength) {
+                    updateChildCurrencies()
+                }else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+"6"
+                }else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "9")
+                    updateChildCurrencies()
                 }
-                updateChildCurrencies()
             }
             R.id.TSp -> {
                 //Timber.tag("Mik").d(Currency1.text.toString().contains(',').toString())
-                if ((Currency1.text.length < MaxLength) && !Currency1.text.toString()
+                if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                    Currency1.text = Currency1.text.toString()+","
+                }else if ((Currency1.text.length < MaxLength-1) && !Currency1.text.toString()
                                 .contains(',')
                 ) {
                     Currency1.text = Currency1.text.toString() + ","
@@ -453,9 +533,46 @@ class MainActivity : AppCompatActivity() {
                     Currency1.text = "0"
                     Currency2.text = "0"
                 } else {
-                    Currency1.text = GroupBy3(Currency1.text.dropLast(1).toString())
-                    updateChildCurrencies()
+                    if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("x")) or (Currency1.text.contains("/")) ){
+                        Currency1.text = Currency1.text.dropLast(1).toString()
+                    }else {
+                        Currency1.text = GroupBy3(Currency1.text.dropLast(1).toString())
+                        updateChildCurrencies()
+                    }
                 }
+            }
+            R.id.plus -> {
+                Currency1.text = Currency1.text.toString() + "+"
+            }
+            R.id.minus -> {
+                Currency1.text = Currency1.text.toString() + "-"
+            }
+            R.id.razy -> {
+                Currency1.text = Currency1.text.toString() + "x"
+            }
+            R.id.dziel -> {
+                Currency1.text = Currency1.text.toString() + "/"
+            }
+            R.id.wynik -> {
+                var str = Currency1.text.toString().replace("\\s".toRegex(), "") //remove white spaces
+                if ( !str.contains("+") and !str.contains("+") and !str.contains("x") and !str.contains("/")) return
+                str=str.replace(',', '.').replace('x','*')
+                Timber.tag("Mik").d( str)
+                val expression = ExpressionBuilder(str).build()
+                try {
+                    // Calculate the result and display
+                    val result = expression.evaluate()
+                    Timber.tag("Mik").d( "Result is: "+result.toString())
+                    Currency1.text = GroupBy3(result.toString().replace('.', ','))
+                    updateChildCurrencies()
+
+                } catch (ex: ArithmeticException) {
+                    // Display an error message
+                    Currency1.text = "0"
+                    Currency2.text = "0"
+                    Timber.tag("Mik").d( "Exception Caught")
+                }
+
             }
         }
     }
@@ -599,6 +716,21 @@ class MainActivity : AppCompatActivity() {
             //Timber.tag("Mik").d("LastInterstitialMin: "+minutes.toInt().toString())
             return minutes.toInt()
         }
+    }
+
+    public fun CurrencySize(c: Int):Float{
+        if (c<14) return resources.getDimension(R.dimen._30ssp)
+        else if (c<15) return resources.getDimension(R.dimen._28ssp)
+        else if (c<16) return resources.getDimension(R.dimen._26ssp)
+        else if (c<17) return resources.getDimension(R.dimen._25ssp)
+        else if (c<18) return resources.getDimension(R.dimen._24ssp)
+        else if (c<19) return resources.getDimension(R.dimen._22ssp)
+        else if (c<20) return resources.getDimension(R.dimen._21ssp)
+        else if (c<21) return resources.getDimension(R.dimen._20ssp)
+        else if (c<22) return resources.getDimension(R.dimen._19ssp)
+        else if (c<23) return resources.getDimension(R.dimen._18ssp)
+        else if (c<24) return resources.getDimension(R.dimen._17ssp)
+        return resources.getDimension(R.dimen._16ssp)
     }
 
     public fun showAdd(){

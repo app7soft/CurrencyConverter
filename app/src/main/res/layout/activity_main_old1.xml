@@ -179,7 +179,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>-->
 
     <TextView
-        android:id="@+id/Currency1"
+        android:id="@+id/Currency11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/_5sdp"
@@ -215,7 +215,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/Flaga2"/>
 
     <TextView
-        android:id="@+id/Currency2"
+        android:id="@+id/Currency22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/_5sdp"
