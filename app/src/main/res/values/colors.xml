@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="TextPurple">#282947</color>
     <color name="GreenBack">#62981E</color>
+    <color name="Grey">#63605B</color>
 </resources>

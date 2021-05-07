@@ -348,7 +348,7 @@
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons_calc"
         android:onClick="Convert"
-        android:text="x"
+        android:text="×"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toTopOf="@+id/plus"
         app:layout_constraintStart_toEndOf="@+id/minus"
@@ -359,7 +359,7 @@
         style="@style/Kalkulator"
         android:background="@drawable/buttons_calc"
         android:onClick="Convert"
-        android:text="%"
+        android:text="÷"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toTopOf="@+id/plus"
         app:layout_constraintStart_toEndOf="@+id/razy"
@@ -529,7 +529,6 @@
         style="@style/Buttons"
         android:background="@drawable/buttons_orange"
         android:onClick="Convert"
-        android:text="Del"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toTopOf="@+id/TS3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -615,6 +614,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.52" />
+        app:layout_constraintGuide_percent="0.515" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

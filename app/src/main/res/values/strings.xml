@@ -4,6 +4,7 @@
     <string name="LastUpdate">Last update: </string>
     <string name="LoadingFailed">Rates loading Failed</string>
     <string name="CheckConnection">Check Your internet connection and refresh</string>
+    <string name="Connection104">Updating rates was unsucessful. Try again later.</string>
     <string name="Rate">Rate app</string>
     <string name="Info">Info</string>
     <string name="Privacy">Privacy</string>

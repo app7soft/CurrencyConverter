@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app7soft.currencyconverter.MainActivity.Companion.currencySymbols
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_symbol_search.*
+import timber.log.Timber
 
 class SymbolSearch: AppCompatActivity()  {
     lateinit var adapter: RecyclerView_Adapter
@@ -44,5 +45,16 @@ class SymbolSearch: AppCompatActivity()  {
 
     fun back(view: View) {
         onBackPressed()
+    }
+
+    override fun onBackPressed() {
+        finish()
+        if (MainActivity.sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && MainActivity().LastInterstitialMin(MainActivity.sharedPreferences) >= MainActivity.ShowIntMin){
+            if (MainActivity.mInterstitialAd.isLoaded) {
+                MainActivity.mInterstitialAd.show()
+            } else {
+                Timber.tag("Mik").d( "The interstitial wasn't loaded yet.")
+            }
+        }
     }
 }
