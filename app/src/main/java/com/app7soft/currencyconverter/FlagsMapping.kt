@@ -161,13 +161,13 @@ fun FlagaResource(s: String): Int{
         "XAF"-> return R.drawable.xaf
         "XAG"-> return R.drawable.xag
         "XAU"-> return R.drawable.xau
-        //"XCD"-> return R.drawable.xcd
-        //"XDR"-> return R.drawable.xdr
-        //"XOF"-> return R.drawable.xof
-        //"XPF"-> return R.drawable.xpf
+        "XCD"-> return R.drawable.xcd
+        "XDR"-> return R.drawable.xdr
+        "XOF"-> return R.drawable.xof
+        "XPF"-> return R.drawable.xpf
         "YER"-> return R.drawable.yer
         "ZAR"-> return R.drawable.zar
-        //"ZMK"-> return R.drawable.zmk to jest stare jakieś
+        "ZMK"-> return R.drawable.zmw
         "ZMW"-> return R.drawable.zmw
         "ZWL"-> return R.drawable.zwl
     }

@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
@@ -24,6 +25,9 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -41,8 +45,9 @@ class MainActivity : AppCompatActivity() {
         var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
         lateinit var mInterstitialAd: InterstitialAd
         var AdErrorCount = 0 //próbujemy wczytywac maksymalnie 5 razy co 2 sekundy
-        var ShowIntRunNumber: Int = 6 //Interstitial Reklmay pokazujemy od 4 uruchomienia
+        var ShowIntRunNumber: Int = 6 //Interstitial Reklmay pokazujemy od 6 uruchomienia
         var ShowIntMin: Int = 480  //Interstitial pokazujemy nieczęsciej niz co 480 min = 8h
+        var RateRunNumber: Int = 10 //pytamy o rating przy 10 uruchomieniu jeśli nie zczyta sie z bazy danych
         var currencySymbols: ArrayList<String> = ArrayList()
         var SymbolsNames: ArrayList<String> = ArrayList()
         var SymbolsToNamesCollection = HashMap<String, Any>()
@@ -51,13 +56,13 @@ class MainActivity : AppCompatActivity() {
 
     private var CurrencyRatesResponse: JSONObject? = null //Obecne kursy walut zwócone przez API
     private var SymbolsToNamesResponse: JSONObject? = null //Mapowanie symboli na pełna Nazwe waluty zwócone przez API
-
-    //private var SymbolsToNamesCollection = HashMap<String, Any>()
     private var ratesCollection = HashMap<String, Any>()
 
-    //lateinit var sharedPreferences: SharedPreferences
-    var MaxLength: Int = 19
-    var MaxEQLength: Int = 40
+    lateinit var manager: ReviewManager
+    var reviewInfo: ReviewInfo? = null
+
+    var MaxLength: Int = 19 //Max length of main number
+    var MaxEQLength: Int = 40 //Max length of equation
     var RatesUpdateOnStart: Boolean = true
     var gson = Gson()
     var json: String? = "" //temporary string to convert gson.JsonObject to JSONObject
@@ -115,7 +120,10 @@ class MainActivity : AppCompatActivity() {
             InitNames()
             updateChildCurrencies()
         }
-
+        initDatabaseData() //zczytujemy dane z Bazy Danych Firebase
+        if ((sharedPreferences.getInt("RunNumber", 0) >= RateRunNumber) and (Build.VERSION.SDK_INT >= 21) and (RatingDays(sharedPreferences)>10)) {
+            initReviews()
+        }
         //If first time or last update was mor than one hour
         if (!sharedPreferences.contains("RunNumber") or (LastUpdateDiff() > 60)) {
             getRequest() //Updejt walut
@@ -170,9 +178,6 @@ class MainActivity : AppCompatActivity() {
         AdErrorCount = 0
         mInterstitialAd.loadAd(AdRequest.Builder().build())
 
-        //initInterstitialAds(sharedPreferences)
-        initDatabaseData()  //zczytujemy dane z Bazy Danych Firebase
-
         Currency1.setTextSize(TypedValue.COMPLEX_UNIT_PX, CurrencySize(Currency1.text.length))
         Currency2.setTextSize(TypedValue.COMPLEX_UNIT_PX, CurrencySize(Currency2.text.length))
         Currency1.addTextChangedListener(object : TextWatcher {
@@ -204,6 +209,11 @@ class MainActivity : AppCompatActivity() {
                 Currency2.setTextSize(TypedValue.COMPLEX_UNIT_PX, CurrencySize(count))
             }
         })
+
+        Handler().postDelayed({
+            askReview()
+        }, 1500)
+
     }
 
     private fun getRequest() {
@@ -871,6 +881,48 @@ class MainActivity : AppCompatActivity() {
                 Timber.tag("Mik").d("The interstitial wasn't loaded yet.")
             }
        }
+    }
+
+    private fun initReviews() {
+        manager = ReviewManagerFactory.create(this)
+        manager.requestReviewFlow().addOnCompleteListener { request ->
+            if (request.isSuccessful) {
+                reviewInfo = request.result
+                Timber.tag("Mik").d("initReview() Done")
+            } else {
+                Timber.tag("Mik").d("Problem z initReview()")
+            }
+        }
+    }
+
+    private fun askReview(){
+        if (reviewInfo != null) {
+            val editor = sharedPreferences.edit()
+            editor.putLong("DataZapytaniaRating", Date().getTime()) //Zapisujemy date zapytania o rating
+            editor.commit()
+            manager.launchReviewFlow(this, reviewInfo!!).addOnFailureListener {//Cos poszło nie tak, ktoś nie zrobił review
+                // Log error and continue with the flow
+                Timber.tag("Mik").d( "There was issue with review, User did not completed Review")
+            }.addOnCompleteListener { _ ->
+                // NIezależnie czy user dał submit czy nie będzie on Complete. Jeśli user już robił feedback to poprostu nie pokaże sie okienko.
+                Timber.tag("Mik").d( "Review was succesfull")
+            }
+        }
+    }
+
+    fun  RatingDays(sharepref: SharedPreferences):Int{
+        val date1 = sharepref.getLong("DataZapytaniaRating", 0)
+        if(date1.toInt() == 0){
+            return 100 //Jeśli nie było jeszcze zapytania o rating to traktujemy jakby juz mineło 100 dni od ostatniego zapytania
+        } else {
+            val diff = Date().getTime()-date1
+            val seconds = diff / 1000
+            val minutes = seconds / 60
+            val hours = minutes / 60
+            val days = hours / 24
+            Timber.tag("Mik").d( "Last Rating asked (days ago): "+days.toInt().toString())
+            return days.toInt()
+        }
     }
 
 }

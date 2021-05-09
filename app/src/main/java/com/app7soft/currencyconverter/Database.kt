@@ -1,5 +1,6 @@
 package com.app7soft.currencyconverter
 
+import com.app7soft.currencyconverter.MainActivity.Companion.RateRunNumber
 import com.app7soft.currencyconverter.MainActivity.Companion.ShowIntMin
 import com.app7soft.currencyconverter.MainActivity.Companion.ShowIntRunNumber
 import com.google.firebase.database.DataSnapshot
@@ -14,6 +15,7 @@ fun initDatabaseData(){
     val database = Firebase.database
     val myRef1 = database.getReference("ShowIntMin")
     val myRef2 = database.getReference("ShowIntRunNumber")
+    val myRef3 = database.getReference("RateRunNumber")
 
     myRef1.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -41,6 +43,20 @@ fun initDatabaseData(){
         override fun onCancelled(error: DatabaseError) {
             // Failed to read value
             Timber.tag("Mik").d("Failed to read ShowIntRunNumber value")
+        }
+    })
+
+    myRef3.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            val value = dataSnapshot.getValue<Int>()
+            Timber.tag("Mik").d("RateRunNumber: "+value.toString())
+            if (value != null) { //zczytujemy wartość z Bazy Danych
+                RateRunNumber = value
+            }
+        }
+        override fun onCancelled(error: DatabaseError) {
+            // Failed to read value
+            Timber.tag("Mik").d("Failed to read RateRunNumber value")
         }
     })
 }
