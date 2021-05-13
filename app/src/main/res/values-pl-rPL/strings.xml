@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Konwerter Walut</string>
+    <string name="UpdatingRates">Aktualizacja Kursów</string>
+    <string name="LastUpdate">Zaktualizowano: </string>
+    <string name="LoadingFailed">Błąd ściągania danych</string>
+    <string name="CheckConnection">Sprawdź połączenie internetowe i odśwież</string>
+    <string name="Connection104">Aktualizacja danych nie powiodła się. Spróbuj ponownie później.</string>
+    <string name="Rate">Oceń</string>
+    <string name="Info">Info</string>
+    <string name="Privacy">Prywatność</string>
+    <string name="Share">Udostępnij</string>
+    <string name="MyCurrency">Exchange Rates</string>
+    <string name="NoticeBold">Uwaga</string>
+    <string name="Search">Szukaj</string>
+    <string name="Notice">Kursy wymiany prezentowane w aplikacji są jedynie orientacyjne. Dane dostarcza FixerApi i są odświeżane raz na 1h. Kursy mogą zmienić się w dowolnym momencie i nie możemy zagwarantować ich dokładności. \nPrzed każdą transakcją wymiany należy zawsze sprawdzić aktualny kurs w miejscu dokonywania transakcji. \n\nNie bierzemy odpowiedzialności za żadne straty poniesione w skutek informacji odczytanych w tej aplikacji.</string>
+</resources>

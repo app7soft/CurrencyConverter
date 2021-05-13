@@ -12,11 +12,12 @@
     <string name="PrivacyPolicy"><a href="https://docs.google.com/document/d/1fVCdU1wN4IBz-u3tfrVLy1r_YbL9B1eVFYE6O76w2v0/edit?usp=sharing">Privacy Policy</a></string>
     <string name="MyCurrency">Exchange Rates</string>
     <string name="NoticeBold">Notice</string>
-    <string name="Notice">The exchange rates provided here are indicative only and may differ from the official rate at your bank. Rates may change at any time.\n\nWe are not responsible for any losses arising from reading or interpreting the information contained in this app.\nBefore any transaction you should always check official rates in your bank or exchange point.</string>
+    <string name="Search">Search</string>
+    <string name="Notice">The exchange rates presented here are informational only. Data are provided by FixerApi and refreshed once every 1 hour. Rates can change at any time and we cannot guarantee their accuracy.\n\nBefore any exchange transaction you should always check official rates at the place of the transaction.\nWe accept no responsibility for any losses incurred as a result of information read in this app.</string>
 
-    <!--<string name="banner_ad_unit_id">ca-app-pub-5209961561922052/2707233821</string>-->
+    <string name="banner_ad_unit_id">ca-app-pub-5209961561922052/2707233821</string>
     <!--Test Baner ADD-->
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
 
 
 </resources>

@@ -1,9 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.CurrencyConverter" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Start Logo -->
+        <item name="android:windowBackground">@drawable/logo_start</item>
+        <item name="windowNoTitle">true</item>
+
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">#ffffff</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">#6E6E6E</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">#4E4E4E</item>

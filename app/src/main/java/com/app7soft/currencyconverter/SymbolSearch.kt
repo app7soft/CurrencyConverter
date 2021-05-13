@@ -49,7 +49,7 @@ class SymbolSearch: AppCompatActivity()  {
 
     override fun onBackPressed() {
         finish()
-        if (MainActivity.sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && MainActivity().LastInterstitialMin(MainActivity.sharedPreferences) >= MainActivity.ShowIntMin){
+        if (MainActivity.sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && F().LastInterstitialMin(MainActivity.sharedPreferences) >= MainActivity.ShowIntMin){
             if (MainActivity.mInterstitialAd.isLoaded) {
                 MainActivity.mInterstitialAd.show()
             } else {

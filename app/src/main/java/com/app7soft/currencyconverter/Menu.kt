@@ -54,7 +54,7 @@ class Menu : AppCompatActivity() {
 
     override fun onBackPressed() {
         finish()
-        if (sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && MainActivity().LastInterstitialMin(sharedPreferences) >= MainActivity.ShowIntMin){
+        if (sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && F().LastInterstitialMin(sharedPreferences) >= MainActivity.ShowIntMin){
             if (mInterstitialAd.isLoaded) {
                 mInterstitialAd.show()
             } else {

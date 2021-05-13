@@ -41,11 +41,11 @@ import kotlin.math.absoluteValue
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        //var InterstitialID = "ca-app-pub-5209961561922052/7183758786" //Real for 361
-        var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
+        var InterstitialID = "ca-app-pub-5209961561922052/7183758786" //Real for 361
+        //var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
         lateinit var mInterstitialAd: InterstitialAd
         var AdErrorCount = 0 //próbujemy wczytywac maksymalnie 5 razy co 2 sekundy
-        var ShowIntRunNumber: Int = 6 //Interstitial Reklmay pokazujemy od 6 uruchomienia
+        var ShowIntRunNumber: Int = 12 //Interstitial Reklmay pokazujemy od 12 uruchomienia
         var ShowIntMin: Int = 480  //Interstitial pokazujemy nieczęsciej niz co 480 min = 8h
         var RateRunNumber: Int = 10 //pytamy o rating przy 10 uruchomieniu jeśli nie zczyta sie z bazy danych
         var currencySymbols: ArrayList<String> = ArrayList()
@@ -81,10 +81,14 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        val CurrentCountry = resources.configuration.locale
-        CurrentCurrency = Currency.getInstance(CurrentCountry).currencyCode
-
-        //Timber.tag("Mik").d(Currency.getInstance("LLL").getDisplayName())
+        //val CurrentCountry = resources.configuration.locale
+        //val CurrentCountry = "en"
+        //Timber.tag("Mik").d(Locale.getDefault().toString())
+        try {
+            CurrentCurrency = Currency.getInstance(Locale.getDefault()).currencyCode
+        }catch (e: IllegalArgumentException) {
+            CurrentCurrency = "EUR"; // default symbol
+        }
 
         if (!sharedPreferences.contains("RunNumber")) {
             Timber.tag("Mik").d("APLIKACJA URUCHOMIONA PIERWSZY RAZ....")
@@ -121,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             updateChildCurrencies()
         }
         initDatabaseData() //zczytujemy dane z Bazy Danych Firebase
-        if ((sharedPreferences.getInt("RunNumber", 0) >= RateRunNumber) and (Build.VERSION.SDK_INT >= 21) and (RatingDays(sharedPreferences)>10)) {
+        if ((Build.VERSION.SDK_INT >= 21) and (F().RatingDays(sharedPreferences)>10)) {
             initReviews()
         }
         //If first time or last update was mor than one hour
@@ -131,7 +135,6 @@ class MainActivity : AppCompatActivity() {
             RatesUpdateOnStart = false
         }
 
-        //setInitView()
 
         val refresh = findViewById(R.id.refresh) as ImageView;
         refresh.setOnClickListener {
@@ -210,8 +213,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        //Zapytanie o rating opóżniamy o 1,5sek żeby zdążyło sie zainicjalizować Review i zczytać z DB RateRunReview
         Handler().postDelayed({
-            askReview()
+            if ((sharedPreferences.getInt("RunNumber", 0) >= RateRunNumber) and (Build.VERSION.SDK_INT >= 21)){
+                askReview()
+            }
         }, 1500)
 
     }
@@ -438,6 +444,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "0"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "0")
@@ -451,6 +458,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "1"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "1")
@@ -464,6 +472,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "2"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "2")
@@ -477,6 +486,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "3"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "3")
@@ -490,6 +500,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "4"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "4")
@@ -503,6 +514,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "5"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "5")
@@ -516,6 +528,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "6"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "6")
@@ -529,6 +542,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "7"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "7")
@@ -542,6 +556,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "8"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "8")
@@ -555,6 +570,7 @@ class MainActivity : AppCompatActivity() {
                 } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if (Currency1.text.length < MaxEQLength) {
                         Currency1.text = Currency1.text.toString() + "9"
+                        przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
                     Currency1.text = GroupBy3(Currency1.text.toString() + "9")
@@ -564,7 +580,7 @@ class MainActivity : AppCompatActivity() {
             R.id.TSp -> {
                 //Timber.tag("Mik").d(Currency1.text.toString().contains(',').toString())
                 if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
-                    if ((Currency1.text.length < MaxEQLength - 1) and (Currency1.text.last() != ',')) {
+                    if ((Currency1.text.length < MaxEQLength - 1) and (Currency1.text.last() != ',') and (Currency1.text.last() != '+') and (Currency1.text.last() != '-') and (Currency1.text.last() != '×') and (Currency1.text.last() != '÷')) {
                         Currency1.text = Currency1.text.toString() + ","
                     }
                 } else if ((Currency1.text.length < MaxLength - 1) && !Currency1.text.toString()
@@ -584,11 +600,12 @@ class MainActivity : AppCompatActivity() {
                     Currency1.text = "0"
                     Currency2.text = "0"
                 } else {
-                    if (Currency1.text.first() == '-') {
+                    if ((Currency1.text.first() == '-')) {
                         Currency1.text = GroupBy3(Currency1.text.dropLast(1).toString())
                         updateChildCurrencies()
                     } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("÷")) or (Currency1.text.contains("×"))) {
                         Currency1.text = Currency1.text.dropLast(1).toString()
+                        przeliczDel()
                     } else {
                         Currency1.text = GroupBy3(Currency1.text.dropLast(1).toString())
                         updateChildCurrencies()
@@ -635,12 +652,56 @@ class MainActivity : AppCompatActivity() {
                 } catch (ex: ArithmeticException) {
                     // Display an error message
                     Currency1.text = "e"
-                    Currency2.text = "0"
+                    Currency2.text = "e"
                     Timber.tag("Mik").d("Exception Caught")
                 }
                 showAdd()
 
             }
+        }
+    }
+
+    fun przelicz(){
+        var str = Currency1.text.toString().replace("\\s".toRegex(), "") //remove white spaces
+        if (!str.last().isDigit()) { //jeśli na końcu jest przecinek lub znak to usuwamy
+            return
+        }
+        if (!str.contains("+") and !str.contains("-") and !str.contains("×") and !str.contains("÷")) return
+        str = str.replace(',', '.').replace("÷", "/").replace("×", "*")
+        val expression = ExpressionBuilder(str).build()
+        try {
+            // Calculate the result and display
+            val result = expression.evaluate()
+            //Timber.tag("Mik").d("Result is: " + result.toString())
+            val s = ustaw_dokladnosc(result)
+            //Currency1.text = GroupBy3(s.replace('.', ','))
+            Currency2.text = GroupBy3(Calculate(s))
+
+        } catch (ex: ArithmeticException) {
+            // Display an error message
+            Currency2.text = "e"
+        }
+    }
+
+    fun przeliczDel(){
+        var str = Currency1.text.toString().replace("\\s".toRegex(), "") //remove white spaces
+        if (!str.last().isDigit()) {
+            str=str.dropLast(1)
+        }
+        //if (!str.contains("+") and !str.contains("-") and !str.contains("×") and !str.contains("÷")) return
+        str = str.replace(',', '.').replace("÷", "/").replace("×", "*")
+        val expression = ExpressionBuilder(str).build()
+        try {
+            // Calculate the result and display
+            val result = expression.evaluate()
+            //Timber.tag("Mik").d("Result is: " + result.toString())
+            val s = ustaw_dokladnosc(result)
+            //Currency1.text = GroupBy3(s.replace('.', ','))
+            Currency2.text = GroupBy3(Calculate(s))
+
+        } catch (ex: ArithmeticException) {
+            // Display an error message
+            Currency2.text = "e"
         }
     }
 
@@ -726,7 +787,11 @@ class MainActivity : AppCompatActivity() {
                 val editor = sharedPreferences.edit()
                 editor.putString("Currency1Symbol", RetrunSymbol)
                 editor.commit()
-                updateChildCurrencies() //przelicz z nowymi ustawieniami
+                if(!IsCurrency1Number()) {
+                    przelicz()
+                }else {
+                    updateChildCurrencies() //przelicz z nowymi ustawieniami
+                }
             }
         }
 
@@ -743,7 +808,11 @@ class MainActivity : AppCompatActivity() {
                 val editor = sharedPreferences.edit()
                 editor.putString("Currency2Symbol", RetrunSymbol)
                 editor.commit()
-                updateChildCurrencies() //przelicz z nowymi ustawieniami
+                if(!IsCurrency1Number()) {
+                    przelicz()
+                }else {
+                    updateChildCurrencies() //przelicz z nowymi ustawieniami
+                }
             }
         }
     }
@@ -760,32 +829,86 @@ class MainActivity : AppCompatActivity() {
 
         if (c == 0.0) {
             return "0"
-        } /*else if (c > 999999999) {
-            str = String.format("%.0f", c)
-        } else if (c > 99999999) {
-            str = String.format("%.1f", c)
-        }*/ else if (c >= 0.01) { //lub Waluta
+        }else if (c >= 0.1) { //lub Waluta
             str = String.format("%.2f", c)
-            //Timber.tag("Mik").d("str before removal ,00: "+str)
             if (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == "0") {
+        }else if (c >= 0.01) {
+            str = String.format("%.3f", c)
+            while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ",") {
+            if (str.takeLast(1) == ".") {
                 str = str.dropLast(1)
             }
-            //Timber.tag("Mik").d("str after removal: "+str)
-        } else { //dla Kryptowalut
+        }else if (c >= 0.001) {
+            str = String.format("%.4f", c)
+            while (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            if (str.takeLast(1) == ".") {
+                str = str.dropLast(1)
+            }
+        }else if (c >= 0.0001) {
+            str = String.format("%.5f", c)
+            while (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            if (str.takeLast(1) == ".") {
+                str = str.dropLast(1)
+            }
+        }else if (c >= 0.00001) {
+            str = String.format("%.6f", c)
+            while (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            if (str.takeLast(1) == ".") {
+                str = str.dropLast(1)
+            }
+        }else if (c >= 0.000001) {
+            str = String.format("%.7f", c)
+            while (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            if (str.takeLast(1) == ".") {
+                str = str.dropLast(1)
+            }
+        }else if (c >= 0.0000001) {
+            str = String.format("%.8f", c)
+            while (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            if (str.takeLast(1) == ".") {
+                str = str.dropLast(1)
+            }
+        }else if (c >= 0.00000001) {
+            str = String.format("%.9f", c)
+            while (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            if (str.takeLast(1) == ".") {
+                str = str.dropLast(1)
+            }
+        }else if (c >= 0.000000001) {
             str = String.format("%.10f", c)
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            while (str.length >= 5 && str.takeLast(3).toString().toInt() >= 101) {
+            if (str.takeLast(1) == ".") {
                 str = str.dropLast(1)
             }
+        }else return "0"
+
+    /*else { //dla Kryptowalut
+        str = String.format("%.10f", c)
+        while (str.takeLast(1) == "0") {
+            str = str.dropLast(1)
         }
+        while (str.length >= 5 && str.takeLast(3).toString().toInt() >= 101) {
+            str = str.dropLast(1)
+        }
+    }*/
         if(ujemna) str='-'+str
         return str
     }
@@ -840,23 +963,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateChildCurrencies(){
-        Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+        if(IsCurrency1Number()) {
+            Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+        }
         Kurs.text = "1 "+sharedPreferences.getString("Currency1Symbol", "EUR")+" = "+Calculate("1")+" "+sharedPreferences.getString("Currency2Symbol", "EUR")
     }
 
-    public fun  LastInterstitialMin(sharepref: SharedPreferences):Int{
-        val date1 = sharepref.getLong("InterstitialTime", 0)
-        if(date1.toInt() == 0){
-            //Timber.tag("Mik").d("LastInterstitialMin: 6000")
-            return 6000 //Jeśli nie było jeszcze wyswietlenia to trkatujemy jakby mineło 6000 min
-        } else {
-            val diff = Date().getTime()-date1
-            val seconds = diff / 1000
-            val minutes = seconds / 60
-            //Timber.tag("Mik").d("LastInterstitialMin: "+minutes.toInt().toString())
-            return minutes.toInt()
-        }
-    }
 
     public fun CurrencySize(c: Int):Float{
         if (c<14) return resources.getDimension(R.dimen._30ssp)
@@ -874,7 +986,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAdd(){
-       if (sharedPreferences.getInt("RunNumber", 10) >= ShowIntRunNumber && MainActivity().LastInterstitialMin(sharedPreferences) >= ShowIntMin){
+       if (sharedPreferences.getInt("RunNumber", 10) >= ShowIntRunNumber && F().LastInterstitialMin(sharedPreferences) >= ShowIntMin){
            if (mInterstitialAd.isLoaded) {
                 mInterstitialAd.show()
             } else {
@@ -907,21 +1019,6 @@ class MainActivity : AppCompatActivity() {
                 // NIezależnie czy user dał submit czy nie będzie on Complete. Jeśli user już robił feedback to poprostu nie pokaże sie okienko.
                 Timber.tag("Mik").d( "Review was succesfull")
             }
-        }
-    }
-
-    fun  RatingDays(sharepref: SharedPreferences):Int{
-        val date1 = sharepref.getLong("DataZapytaniaRating", 0)
-        if(date1.toInt() == 0){
-            return 100 //Jeśli nie było jeszcze zapytania o rating to traktujemy jakby juz mineło 100 dni od ostatniego zapytania
-        } else {
-            val diff = Date().getTime()-date1
-            val seconds = diff / 1000
-            val minutes = seconds / 60
-            val hours = minutes / 60
-            val days = hours / 24
-            Timber.tag("Mik").d( "Last Rating asked (days ago): "+days.toInt().toString())
-            return days.toInt()
         }
     }
 

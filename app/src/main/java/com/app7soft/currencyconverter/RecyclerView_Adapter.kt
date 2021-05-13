@@ -106,7 +106,7 @@ class RecyclerView_Adapter(private var countryList: ArrayList<String>) : Recycle
     }
 
     private fun showAdd(){
-        if (sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && MainActivity().LastInterstitialMin(sharedPreferences) >= MainActivity.ShowIntMin){
+        if (sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && F().LastInterstitialMin(sharedPreferences) >= MainActivity.ShowIntMin){
             if (MainActivity.mInterstitialAd.isLoaded) {
                 MainActivity.mInterstitialAd.show()
             } else {
