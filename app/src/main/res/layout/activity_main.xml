@@ -137,7 +137,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/input_currency_main"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_13sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHeight_percent="0.11"
@@ -194,24 +194,6 @@
         app:layout_constraintTop_toTopOf="@+id/Flaga1"
         app:layout_constraintBottom_toBottomOf="@+id/Flaga1"/>
 
-
-    <!--<ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:srcCompat="@drawable/drop_down"
-        app:layout_constraintWidth_percent="0.07"
-        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
-        app:layout_constraintEnd_toStartOf="@+id/Currency1tlo"
-        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>-->
-
-    <!--<ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:srcCompat="@drawable/drop_down"
-        app:layout_constraintWidth_percent="0.07"
-        app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
-        app:layout_constraintEnd_toStartOf="@+id/Currency2tlo"
-        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>-->
 <!--
     <TextView
         android:id="@+id/Currency1"
@@ -242,19 +224,56 @@
         android:fontFamily="@font/circular_pro_medium"
         android:text="0"
         android:gravity="right"
-        android:paddingLeft="@dimen/_2sdp"
-        app:layout_constraintStart_toEndOf="@+id/Currency1Symbol"
+        app:layout_constraintStart_toEndOf="@+id/drop_down_currency1"
         app:layout_constraintEnd_toEndOf="@+id/Currency1tlo"
         app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
         app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>
+
+<!--
+    <EditText
+        android:id="@+id/Currency1new"
+        android:layout_width="3dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/_5sdp"
+        style="@style/Currency"
+        android:fontFamily="@font/circular_pro_medium"
+       android:gravity="right"
+        android:background="@null"
+        android:textCursorDrawable="@drawable/cursor"
+        android:cursorVisible="true"
+        android:inputType="none"
+        app:layout_constraintEnd_toEndOf="@+id/Currency1tlo"
+        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>-->
+
+    <ImageView
+        android:id="@+id/drop_down_currency1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/drop_down_2"
+        app:layout_constraintWidth_percent="0.07"
+        app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
+        app:layout_constraintStart_toEndOf="@+id/Currency1Symbol"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"/>
+
+    <ImageView
+        android:id="@+id/drop_down_currency2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/drop_down_2"
+        app:layout_constraintWidth_percent="0.07"
+        app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
+        app:layout_constraintStart_toEndOf="@+id/Currency2Symbol"
+        app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>
 
     <ImageView
         android:id="@+id/Search1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="Search1"
+        style="?android:borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="@+id/Currency1tlo"
-        app:layout_constraintEnd_toEndOf="@+id/Currency1tlo"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
         app:layout_constraintStart_toStartOf="@+id/Currency1tlo"
         app:layout_constraintTop_toTopOf="@+id/Currency1tlo"
         app:layout_constraintVertical_bias="0.0" />
@@ -280,8 +299,7 @@
         android:fontFamily="@font/circular_pro_medium"
         android:text="0"
         android:gravity="right"
-        android:paddingLeft="@dimen/_2sdp"
-        app:layout_constraintStart_toEndOf="@+id/Currency2Symbol"
+        app:layout_constraintStart_toEndOf="@+id/drop_down_currency2"
         app:layout_constraintEnd_toEndOf="@+id/Currency2tlo"
         app:layout_constraintTop_toTopOf="@+id/Currency2tlo"
         app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"/>
@@ -291,8 +309,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="Search2"
+        style="?android:borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="@+id/Currency2tlo"
-        app:layout_constraintEnd_toEndOf="@+id/Currency2tlo"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVertical"
         app:layout_constraintStart_toStartOf="@+id/Currency2tlo"
         app:layout_constraintTop_toTopOf="@+id/Currency2tlo"/>
 
@@ -305,7 +324,7 @@
         android:layout_marginTop="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_2sdp"
         app:layout_constraintTop_toBottomOf="@+id/Search2"
-        app:layout_constraintEnd_toEndOf="@+id/Search2"/>
+        app:layout_constraintEnd_toEndOf="@+id/Currency2"/>
 
     <!--<TextView
         android:id="@+id/Currency1Name"
@@ -603,6 +622,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.515" />
+        app:layout_constraintGuide_percent="0.52" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

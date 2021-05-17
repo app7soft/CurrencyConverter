@@ -13,7 +13,7 @@
     <string name="MyCurrency">Exchange Rates</string>
     <string name="NoticeBold">Notice</string>
     <string name="Search">Search</string>
-    <string name="Notice">The exchange rates presented here are informational only. Data are provided by FixerApi and refreshed once every 1 hour. Rates can change at any time and we cannot guarantee their accuracy.\n\nBefore any exchange transaction you should always check official rates at the place of the transaction.\nWe accept no responsibility for any losses incurred as a result of information read in this app.</string>
+    <string name="Notice">The exchange rates presented here are informational only. Data is provided by FixerApi and is refreshed once every 1 hour. Rates can change at any time and we cannot guarantee their accuracy.\n\nBefore any exchange transaction we suggest checking official rates at the place of the transaction.\nWe accept no responsibility for any losses incurred as a result of information read in this app.</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-5209961561922052/2707233821</string>
     <!--Test Baner ADD-->

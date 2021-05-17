@@ -15,10 +15,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
+import androidx.core.widget.TextViewCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.ads.AdListener
@@ -67,6 +69,8 @@ class MainActivity : AppCompatActivity() {
     var gson = Gson()
     var json: String? = "" //temporary string to convert gson.JsonObject to JSONObject
     var CurrentCurrency: String = ""
+    //var C1actual_size = 0F
+    //var C2actual_size = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar)
@@ -78,12 +82,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         DataLoading.setVisibility(View.GONE)
 
+        //C1actual_size = resources.getDimension(R.dimen._30ssp)
+        //C2actual_size = resources.getDimension(R.dimen._30ssp)
+
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
         //val CurrentCountry = resources.configuration.locale
         //val CurrentCountry = "en"
         //Timber.tag("Mik").d(Locale.getDefault().toString())
+
         try {
             CurrentCurrency = Currency.getInstance(Locale.getDefault()).currencyCode
         }catch (e: IllegalArgumentException) {
@@ -185,7 +193,9 @@ class MainActivity : AppCompatActivity() {
         Currency2.setTextSize(TypedValue.COMPLEX_UNIT_PX, CurrencySize(Currency2.text.length))
         Currency1.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {
@@ -193,8 +203,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {
-                //Timber.tag("Mik").d("ilosc znakow: "+count)
+                //Timber.tag("Mik").d("tekst sie zmienił, ilosc lini to: "+Currency1.lineCount)
                 Currency1.setTextSize(TypedValue.COMPLEX_UNIT_PX, CurrencySize(count))
+
             }
         })
 
@@ -326,10 +337,20 @@ class MainActivity : AppCompatActivity() {
         SymbolsToNamesCollection = ConvertJsonToHash(SymbolsToNamesResponse!!)
         //Timber.tag("Mik").d(SymbolsToNamesCollection.toString())
         for ((key, value) in SymbolsToNamesCollection) {
-            val sym = Currency.getInstance(key).getDisplayName()
+            try {
+                //if(key == "JEP") throw IllegalArgumentException()
+                val sym = Currency.getInstance(key).getDisplayName()
+                if (key != sym) {
+                    SymbolsToNamesCollection[key] = Currency.getInstance(key).getDisplayName()
+                }
+            }catch (e: IllegalArgumentException) {
+                //Timber.tag("Mik").d("przechwyciłem wyjątek")
+            }
+
+            /*val sym = Currency.getInstance(key).getDisplayName()
             if (key != sym) {
                 SymbolsToNamesCollection[key] = Currency.getInstance(key).getDisplayName()
-            }
+            }*/
         }
         //Timber.tag("Mik").d(SymbolsToNamesCollection.toString())
 
@@ -579,6 +600,19 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.TSp -> {
                 //Timber.tag("Mik").d(Currency1.text.toString().contains(',').toString())
+                //zabezpieczenie przed dwoma przecinkami w jednej liczbie
+                var s=Currency1.text
+                Timber.tag("Mik").d("s: "+s)
+                if(s.last().isDigit()) {
+                    s=s.dropLastWhile { it.isDigit() }
+                    Timber.tag("Mik").d("s:"+s+":")
+                    Timber.tag("Mik").d("s.length:"+s.length)
+                    if (s.length>0){
+                        if (s.last() == ',') return
+                    }
+                }
+                //koniec zabezpieczenia przed dwoma przecinkami
+
                 if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
                     if ((Currency1.text.length < MaxEQLength - 1) and (Currency1.text.last() != ',') and (Currency1.text.last() != '+') and (Currency1.text.last() != '-') and (Currency1.text.last() != '×') and (Currency1.text.last() != '÷')) {
                         Currency1.text = Currency1.text.toString() + ","
@@ -834,12 +868,18 @@ class MainActivity : AppCompatActivity() {
             if (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
+            if (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
+                str = str.dropLast(1)
+            }
         }else if (c >= 0.01) {
             str = String.format("%.3f", c)
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else if (c >= 0.001) {
@@ -847,7 +887,7 @@ class MainActivity : AppCompatActivity() {
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else if (c >= 0.0001) {
@@ -855,7 +895,7 @@ class MainActivity : AppCompatActivity() {
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else if (c >= 0.00001) {
@@ -863,7 +903,7 @@ class MainActivity : AppCompatActivity() {
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else if (c >= 0.000001) {
@@ -871,7 +911,7 @@ class MainActivity : AppCompatActivity() {
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else if (c >= 0.0000001) {
@@ -879,7 +919,7 @@ class MainActivity : AppCompatActivity() {
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else if (c >= 0.00000001) {
@@ -887,7 +927,7 @@ class MainActivity : AppCompatActivity() {
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else if (c >= 0.000000001) {
@@ -895,7 +935,7 @@ class MainActivity : AppCompatActivity() {
             while (str.takeLast(1) == "0") {
                 str = str.dropLast(1)
             }
-            if (str.takeLast(1) == ".") {
+            if ((str.takeLast(1) == ".") or (str.takeLast(1) == ",")) {
                 str = str.dropLast(1)
             }
         }else return "0"
@@ -971,18 +1011,25 @@ class MainActivity : AppCompatActivity() {
 
 
     public fun CurrencySize(c: Int):Float{
-        if (c<14) return resources.getDimension(R.dimen._30ssp)
-        else if (c<15) return resources.getDimension(R.dimen._28ssp)
-        else if (c<16) return resources.getDimension(R.dimen._26ssp)
-        else if (c<17) return resources.getDimension(R.dimen._25ssp)
-        else if (c<18) return resources.getDimension(R.dimen._24ssp)
-        else if (c<19) return resources.getDimension(R.dimen._22ssp)
-        else if (c<20) return resources.getDimension(R.dimen._21ssp)
-        else if (c<21) return resources.getDimension(R.dimen._20ssp)
-        else if (c<22) return resources.getDimension(R.dimen._19ssp)
-        else if (c<23) return resources.getDimension(R.dimen._18ssp)
-        else if (c<24) return resources.getDimension(R.dimen._17ssp)
+        if (c<12) return resources.getDimension(R.dimen._30ssp)
+        else if (c<14) return resources.getDimension(R.dimen._25ssp)
+        else if (c<15) return resources.getDimension(R.dimen._24ssp)
+        else if (c<16) return resources.getDimension(R.dimen._23ssp)
+        else if (c<17) return resources.getDimension(R.dimen._22ssp)
+        else if (c<18) return resources.getDimension(R.dimen._21ssp)
+        else if (c<19) return resources.getDimension(R.dimen._20ssp)
+        else if (c<20) return resources.getDimension(R.dimen._19ssp)
+        else if (c<21) return resources.getDimension(R.dimen._18ssp)
+        else if (c<22) return resources.getDimension(R.dimen._17ssp)
         return resources.getDimension(R.dimen._16ssp)
+
+        /*while (Currency1.lineCount > 1){
+            C1actual_size = C1actual_size-1
+        }
+        if (Currency1.lineCount > 1) {
+            C1actual_size = resources.getDimension(R.dimen._20ssp)
+            return resources.getDimension(R.dimen._20ssp)
+        }else return C1actual_size*/
     }
 
     private fun showAdd(){

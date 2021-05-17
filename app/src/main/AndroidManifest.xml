@@ -39,6 +39,7 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5209961561922052~7065281234" />
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
     </application>
 
 </manifest>
