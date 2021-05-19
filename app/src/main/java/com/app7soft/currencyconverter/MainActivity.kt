@@ -383,7 +383,9 @@ class MainActivity : AppCompatActivity() {
         var str: String
         //val namesAndValuesMap = matchCurrencyNamesWithCodes(CurrencyRatesResponse, SymbolsToNamesResponse)
 
+        Timber.tag("Mik").d("c1: "+cur1)
         c1 = cur1.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
+        Timber.tag("Mik").d("c1: "+c1.toString())
 
         //Timber.tag("Mik").d("ratesCollection[1]: "+ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")])
         //Timber.tag("Mik").d("Symbol1: "+sharedPreferences.getString("Currency1Symbol", "EUR"))
@@ -797,13 +799,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun Search1(view: View) {
-        val intent = Intent(this, SymbolSearch::class.java)
-        startActivityForResult(intent, 1)
+        if(currencySymbols.size>100) {  //jesli waluty sie nie sciagnely to nie mozna wyszukiwać
+            val intent = Intent(this, SymbolSearch::class.java)
+            startActivityForResult(intent, 1)
+        } else {
+            showAlertDialog()
+        }
     }
 
     fun Search2(view: View) {
-        val intent = Intent(this, SymbolSearch::class.java)
-        startActivityForResult(intent, 2)
+        if(currencySymbols.size>100) {
+            val intent = Intent(this, SymbolSearch::class.java)
+            startActivityForResult(intent, 2)
+        } else {
+            showAlertDialog()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -47,8 +47,13 @@ class RecyclerView_Adapter(private var countryList: ArrayList<String>) : Recycle
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.Symbol.text = countryFilterList[position]
-        holder.itemView.Flaga.setImageResource(FlagaResource(countryFilterList[position]))
         holder.itemView.Nazwa.text = SymbolsToNamesCollection[countryFilterList[position]].toString()
+
+        if (FlagaResource(countryFilterList[position]) != 0) {
+            holder.itemView.Flaga.setImageResource(FlagaResource(countryFilterList[position]))
+        } else {
+            holder.itemView.Flaga.setImageResource(R.drawable.pusta_flaga)
+        }
 
         holder.itemView.setOnClickListener {
             Log.d("Selected:", countryFilterList[position])

@@ -8,7 +8,10 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.app7soft.currencyconverter.MainActivity.Companion.ShowIntMin
+import com.app7soft.currencyconverter.MainActivity.Companion.ShowIntRunNumber
 import com.app7soft.currencyconverter.MainActivity.Companion.currencySymbols
+import com.app7soft.currencyconverter.MainActivity.Companion.sharedPreferences
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_symbol_search.*
 import timber.log.Timber
@@ -20,26 +23,30 @@ class SymbolSearch: AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_symbol_search)
-        adViewSymbolSearch.loadAd(AdRequest.Builder().build())
+        if(currencySymbols.size==0){
+            finish() //Jeśli apka będzie długo w backgroundzie i zabite zostanie MainActivity to odpalamy od nowa
+        }else {
+            setContentView(R.layout.activity_symbol_search)
+            adViewSymbolSearch.loadAd(AdRequest.Builder().build())
 
-        Recycler = findViewById(R.id.SymbolRecyclerView)
-        Recycler.layoutManager = LinearLayoutManager(SymbolRecyclerView.context)
-        Recycler.setHasFixedSize(true)
-        adapter = RecyclerView_Adapter(currencySymbols)
-        Recycler.adapter = adapter
+            Recycler = findViewById(R.id.SymbolRecyclerView)
+            Recycler.layoutManager = LinearLayoutManager(SymbolRecyclerView.context)
+            Recycler.setHasFixedSize(true)
+            adapter = RecyclerView_Adapter(currencySymbols)
+            Recycler.adapter = adapter
 
-        SymbolSearch.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
+            SymbolSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filter.filter(newText)
-                return false
-            }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    adapter.filter.filter(newText)
+                    return false
+                }
 
-        })
+            })
+        }
 
     }
 
@@ -49,7 +56,7 @@ class SymbolSearch: AppCompatActivity()  {
 
     override fun onBackPressed() {
         finish()
-        if (MainActivity.sharedPreferences.getInt("RunNumber", 10) >= MainActivity.ShowIntRunNumber && F().LastInterstitialMin(MainActivity.sharedPreferences) >= MainActivity.ShowIntMin){
+        if (sharedPreferences.getInt("RunNumber", 10) >= ShowIntRunNumber && F().LastInterstitialMin(sharedPreferences) >= ShowIntMin){
             if (MainActivity.mInterstitialAd.isLoaded) {
                 MainActivity.mInterstitialAd.show()
             } else {
