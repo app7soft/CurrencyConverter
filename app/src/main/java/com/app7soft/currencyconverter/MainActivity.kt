@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     var gson = Gson()
     var json: String? = "" //temporary string to convert gson.JsonObject to JSONObject
     var CurrentCurrency: String = ""
-    //var C1actual_size = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar)
