@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Convertidor</string>
+    <string name="UpdatingRates">Actualizar tarifas</string>
+    <string name="LastUpdate">Última actualización:</string>
+    <string name="LoadingFailed">Tarifas de carga fallidas</string>
+    <string name="CheckConnection">Verifique su conexión a Internet y actualice</string>
+    <string name="Connection104">La actualización de las tarifas no tuvo éxito. Vuelve a intentarlo más tarde.</string>
+    <string name="Rate">Calificar aplicacion</string>
+    <string name="Info">Información</string>
+    <string name="Privacy">Intimidad</string>
+    <string name="Share">Cuota</string>
+    <string name="MyCurrency">Tipo de Cambio</string>
+    <string name="NoticeBold">Aviso</string>
+    <string name="Search">Buscar</string>
+    <string name="Notice">Los tipos de cambio presentados aquí son solo informativos. Los datos los proporciona FixerApi y se actualizan una vez cada 1 hora. Las tarifas pueden cambiar en cualquier momento y no podemos garantizar su precisión. \n\nAntes de cualquier transacción de cambio, sugerimos verificar las tarifas oficiales en el lugar de la transacción. \nNo aceptamos ninguna responsabilidad por las pérdidas incurridas como resultado de la información leída en esta aplicación .</string>
+</resources>

@@ -5,9 +5,10 @@ import MySingleton
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,12 +16,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.text.isDigitsOnly
-import androidx.core.widget.TextViewCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.ads.AdListener
@@ -44,6 +44,7 @@ import kotlin.math.absoluteValue
 class MainActivity : AppCompatActivity() {
     companion object {
         var InterstitialID = "ca-app-pub-5209961561922052/7183758786" //Real for 361
+
         //var InterstitialID = "ca-app-pub-3940256099942544/1033173712" //TestAd
         lateinit var mInterstitialAd: InterstitialAd
         var AdErrorCount = 0 //próbujemy wczytywac maksymalnie 5 razy co 2 sekundy
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         var SymbolsNames: ArrayList<String> = ArrayList()
         var SymbolsToNamesCollection = HashMap<String, Any>()
         lateinit var sharedPreferences: SharedPreferences
+        var StrangeLanguage: Boolean = false //dla dziwnych cyfr ustawiamy Locale na Angielski (np. dla Jezyka Arabskiego)
     }
 
     private var CurrencyRatesResponse: JSONObject? = null //Obecne kursy walut zwócone przez API
@@ -79,9 +81,16 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         DataLoading.setVisibility(View.GONE)
+        TurnOnButtonListeners()
 
-        //C1actual_size = resources.getDimension(R.dimen._30ssp)
-        //C2actual_size = resources.getDimension(R.dimen._30ssp)
+        //If digits are from strange locale for example Arabic change it to US to not crash app
+        try {
+            test_przelicz()
+        } catch (e: NumberFormatException) {
+            setLocale(this, "en")
+            StrangeLanguage = true
+        }
+        //Test END
 
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -92,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
         try {
             CurrentCurrency = Currency.getInstance(Locale.getDefault()).currencyCode
-        }catch (e: IllegalArgumentException) {
+        } catch (e: IllegalArgumentException) {
             CurrentCurrency = "EUR"; // default symbol
         }
 
@@ -131,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             updateChildCurrencies()
         }
         initDatabaseData() //zczytujemy dane z Bazy Danych Firebase
-        if ((Build.VERSION.SDK_INT >= 21) and (F().RatingDays(sharedPreferences)>10)) {
+        if ((Build.VERSION.SDK_INT >= 21) and (F().RatingDays(sharedPreferences) > 10)) {
             initReviews()
         }
         //If first time or last update was mor than one hour
@@ -224,11 +233,15 @@ class MainActivity : AppCompatActivity() {
 
         //Zapytanie o rating opóżniamy o 1,5sek żeby zdążyło sie zainicjalizować Review i zczytać z DB RateRunReview
         Handler().postDelayed({
-            if ((sharedPreferences.getInt("RunNumber", 0) >= RateRunNumber) and (Build.VERSION.SDK_INT >= 21)){
+            if ((sharedPreferences.getInt("RunNumber", 0) >= RateRunNumber) and (Build.VERSION.SDK_INT >= 21)) {
                 askReview()
             }
         }, 1500)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if (StrangeLanguage) setLocale(this,"en")
     }
 
     private fun getRequest() {
@@ -238,8 +251,8 @@ class MainActivity : AppCompatActivity() {
         Timber.tag("Mik").d("Updating rates....")
         //Timber.tag("Mik").d(RatesUpdateOnStart.toString())
 
-        val urlCurrencyRates = "http://data.fixer.io/api/latest?access_key=7ce1c2205caeba66fbc17e38b3767be5"
-        val urlCurrencySymbols = "http://data.fixer.io/api/symbols?access_key=7ce1c2205caeba66fbc17e38b3767be5"
+        val urlCurrencyRates = "https://data.fixer.io/api/latest?access_key=7ce1c2205caeba66fbc17e38b3767be5"
+        val urlCurrencySymbols = "https://data.fixer.io/api/symbols?access_key=7ce1c2205caeba66fbc17e38b3767be5"
 
         MySingleton.getInstance(this).addToRequestQueue(JsonObjectRequest(Request.Method.GET,
                 urlCurrencyRates,
@@ -247,7 +260,7 @@ class MainActivity : AppCompatActivity() {
                 { response ->
                     Timber.tag("Mik").d("Response: " + response)
                     if (response.toString().contains("error")) {
-                        showAlertDialog104()
+                        if(!isFinishing()) showAlertDialog104()
                         DataLoading.setVisibility(View.GONE)
                         RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
                         RatesUpdateOnStart = false
@@ -271,8 +284,8 @@ class MainActivity : AppCompatActivity() {
                 { error ->
                     Timber.tag("Mik").d("response Not OK: " + error)
                     RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
-                    if ((RatesUpdateOnStart == false) or (sharedPreferences.getInt("RunNumber", 0) == 1)) {
-                        showAlertDialog()
+                    if ((RatesUpdateOnStart == false) or (sharedPreferences.getInt("RunNumber", 0) == 1) or (ratesCollection.size == 0)) {
+                        if(!isFinishing()) showAlertDialog()
                     } else {
                         Toast.makeText(this, R.string.CheckConnection, Toast.LENGTH_LONG).show();
                     }
@@ -286,7 +299,7 @@ class MainActivity : AppCompatActivity() {
                 null,
                 { response ->
                     if (response.toString().contains("error")) {
-                        showAlertDialog104()
+                        if(!isFinishing()) showAlertDialog104()
                     } else {
                         SymbolsToNamesResponse = response.getJSONObject("symbols")  //namesResponse = response.getJSONObject("symbols")
                         InitNames()
@@ -381,16 +394,19 @@ class MainActivity : AppCompatActivity() {
         var str: String
         //val namesAndValuesMap = matchCurrencyNamesWithCodes(CurrencyRatesResponse, SymbolsToNamesResponse)
 
-        Timber.tag("Mik").d("c1: "+cur1)
+        Timber.tag("Mik").d("c1: " + cur1)
         c1 = cur1.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
-        Timber.tag("Mik").d("c1: "+c1.toString())
+        Timber.tag("Mik").d("c1: " + c1.toString())
 
         //Timber.tag("Mik").d("ratesCollection[1]: "+ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")])
         //Timber.tag("Mik").d("Symbol1: "+sharedPreferences.getString("Currency1Symbol", "EUR"))
         //Timber.tag("Mik").d("ratesCollection[2]: "+ratesCollection[sharedPreferences.getString("Currency2Symbol", "EUR")])
         //Timber.tag("Mik").d("Symbol2: "+sharedPreferences.getString("Currency2Symbol", "EUR"))
-        c2 = calculateEquivalent(ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")]!!, ratesCollection[sharedPreferences.getString("Currency2Symbol", "USD")]!!, c1)
-        //Timber.tag("Mik").d("CalculateEquivalent: "+c2.toString())
+        if(ratesCollection.size!=0) {
+            c2 = calculateEquivalent(ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")]!!, ratesCollection[sharedPreferences.getString("Currency2Symbol", "USD")]!!, c1)
+        }else{
+           c2= 0.0
+        }//Timber.tag("Mik").d("CalculateEquivalent: "+c2.toString())
 
         str = ustaw_dokladnosc(c2)
 
@@ -601,13 +617,13 @@ class MainActivity : AppCompatActivity() {
             R.id.TSp -> {
                 //Timber.tag("Mik").d(Currency1.text.toString().contains(',').toString())
                 //zabezpieczenie przed dwoma przecinkami w jednej liczbie
-                var s=Currency1.text
-                Timber.tag("Mik").d("s: "+s)
-                if(s.last().isDigit()) {
-                    s=s.dropLastWhile { it.isDigit() }
-                    Timber.tag("Mik").d("s:"+s+":")
-                    Timber.tag("Mik").d("s.length:"+s.length)
-                    if (s.length>0){
+                var s = Currency1.text
+                Timber.tag("Mik").d("s: " + s)
+                if (s.last().isDigit()) {
+                    s = s.dropLastWhile { it.isDigit() }
+                    Timber.tag("Mik").d("s:" + s + ":")
+                    Timber.tag("Mik").d("s.length:" + s.length)
+                    if (s.length > 0) {
                         if (s.last() == ',') return
                     }
                 }
@@ -717,6 +733,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //funkcja do sprawdzania czy w innych jezykach sie wywali. Jesli tak to zmieniami Locale
+    fun test_przelicz(){
+         var str = "100.22+5.1"
+         val expression = ExpressionBuilder(str).build()
+         val result = expression.evaluate()
+         val s = ustaw_dokladnosc(result)
+         val c1 = s.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
+    }
+
+
+
     fun przeliczDel(){
         var str = Currency1.text.toString().replace("\\s".toRegex(), "") //remove white spaces
         if (!str.last().isDigit()) {
@@ -801,7 +828,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SymbolSearch::class.java)
             startActivityForResult(intent, 1)
         } else {
-            showAlertDialog()
+            if(!isFinishing()) showAlertDialog()
         }
     }
 
@@ -810,7 +837,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SymbolSearch::class.java)
             startActivityForResult(intent, 2)
         } else {
-            showAlertDialog()
+            if(!isFinishing()) showAlertDialog()
         }
     }
 
@@ -821,11 +848,10 @@ class MainActivity : AppCompatActivity() {
                 val RetrunSymbol = data!!.getStringExtra("Symbol")
                 //Timber.tag("Mik").d("Search1 returned: "+RetrunSymbol)
                 Currency1Symbol.text = RetrunSymbol
-                if (FlagaResource(RetrunSymbol.toString()) != 0) {
-                    Flaga1.setImageResource(FlagaResource(RetrunSymbol))
-                } else {
-                    Flaga1.setImageResource(R.drawable.pusta_flaga)
-                }
+
+                //Flaga1.setImageResource(FlagaResource(RetrunSymbol))
+                Flaga1.setImageDrawable(ContextCompat.getDrawable(this, FlagaResource(RetrunSymbol)))
+
                 val editor = sharedPreferences.edit()
                 editor.putString("Currency1Symbol", RetrunSymbol)
                 editor.commit()
@@ -842,11 +868,10 @@ class MainActivity : AppCompatActivity() {
                 val RetrunSymbol = data!!.getStringExtra("Symbol")
                 //Timber.tag("Mik").d("Search2 returned: "+RetrunSymbol)
                 Currency2Symbol.text = RetrunSymbol
-                if (FlagaResource(RetrunSymbol) != 0) {
-                    Flaga2.setImageResource(FlagaResource(RetrunSymbol))
-                } else {
-                    Flaga2.setImageResource(R.drawable.pusta_flaga)
-                }
+
+                //Flaga2.setImageResource(FlagaResource(RetrunSymbol))
+                Flaga2.setImageDrawable(ContextCompat.getDrawable(this, FlagaResource(RetrunSymbol)))
+
                 val editor = sharedPreferences.edit()
                 editor.putString("Currency2Symbol", RetrunSymbol)
                 editor.commit()
@@ -971,17 +996,13 @@ class MainActivity : AppCompatActivity() {
         Currency1Symbol.text = Currency1Sym
         Currency2Symbol.text = Currency2Sym
 
-        if (FlagaResource(Currency1Sym) != 0) {
-            Flaga1.setImageResource(FlagaResource(Currency1Sym))
-        } else {
-            Flaga1.setImageResource(R.drawable.pusta_flaga)
-        }
 
-        if (FlagaResource(Currency2Sym) != 0) {
-            Flaga2.setImageResource(FlagaResource(Currency2Sym))
-        } else {
-            Flaga2.setImageResource(R.drawable.pusta_flaga)
-        }
+        //Flaga1.setImageResource(FlagaResource(Currency1Sym))
+        Flaga1.setImageDrawable(ContextCompat.getDrawable(this, FlagaResource(Currency1Sym)))
+
+        //Flaga2.setImageResource(FlagaResource(Currency2Sym))
+        Flaga2.setImageDrawable(ContextCompat.getDrawable(this, FlagaResource(Currency2Sym)))
+
     }
 
     fun swap(v: View) {
@@ -1069,12 +1090,77 @@ class MainActivity : AppCompatActivity() {
             editor.commit()
             manager.launchReviewFlow(this, reviewInfo!!).addOnFailureListener {//Cos poszło nie tak, ktoś nie zrobił review
                 // Log error and continue with the flow
-                Timber.tag("Mik").d( "There was issue with review, User did not completed Review")
+                Timber.tag("Mik").d("There was issue with review, User did not completed Review")
             }.addOnCompleteListener { _ ->
                 // NIezależnie czy user dał submit czy nie będzie on Complete. Jeśli user już robił feedback to poprostu nie pokaże sie okienko.
-                Timber.tag("Mik").d( "Review was succesfull")
+                Timber.tag("Mik").d("Review was succesfull")
             }
         }
+    }
+
+    fun setLocale(activity: Activity, languageCode: String?) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val resources: Resources = activity.resources
+        val config: Configuration = resources.getConfiguration()
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.getDisplayMetrics())
+    }
+
+    fun TurnOnButtonListeners(){
+        //ForCompatibilityWithKitKat
+        plus.setOnClickListener{
+            Convert(plus)
+        }
+        razy.setOnClickListener{
+            Convert(razy)
+        }
+        dziel.setOnClickListener{
+            Convert(dziel)
+        }
+        minus.setOnClickListener{
+            Convert(minus)
+        }
+        C.setOnClickListener{
+            Convert(C)
+        }
+        wynik.setOnClickListener{
+            Convert(wynik)
+        }
+        TSp.setOnClickListener{
+            Convert(TSp)
+        }
+        TS0.setOnClickListener{
+            Convert(TS0)
+        }
+        TS1.setOnClickListener{
+            Convert(TS1)
+        }
+        TS2.setOnClickListener{
+            Convert(TS2)
+        }
+        TS3.setOnClickListener{
+            Convert(TS3)
+        }
+        TS4.setOnClickListener{
+            Convert(TS4)
+        }
+        TS5.setOnClickListener{
+            Convert(TS5)
+        }
+        TS6.setOnClickListener{
+            Convert(TS6)
+        }
+        TS7.setOnClickListener{
+            Convert(TS7)
+        }
+        TS8.setOnClickListener{
+            Convert(TS8)
+        }
+        TS9.setOnClickListener{
+            Convert(TS9)
+        }
+
     }
 
 }

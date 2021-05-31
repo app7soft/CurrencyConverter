@@ -2,6 +2,8 @@ package com.app7soft.currencyconverter
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
@@ -15,6 +17,7 @@ import com.app7soft.currencyconverter.MainActivity.Companion.sharedPreferences
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_symbol_search.*
 import timber.log.Timber
+import java.util.*
 
 class SymbolSearch: AppCompatActivity()  {
     lateinit var adapter: RecyclerView_Adapter
@@ -28,6 +31,8 @@ class SymbolSearch: AppCompatActivity()  {
         }else {
             setContentView(R.layout.activity_symbol_search)
             adViewSymbolSearch.loadAd(AdRequest.Builder().build())
+            if (MainActivity.StrangeLanguage) setLocale(this,"en")
+
 
             Recycler = findViewById(R.id.SymbolRecyclerView)
             Recycler.layoutManager = LinearLayoutManager(SymbolRecyclerView.context)
@@ -63,5 +68,14 @@ class SymbolSearch: AppCompatActivity()  {
                 Timber.tag("Mik").d( "The interstitial wasn't loaded yet.")
             }
         }
+    }
+
+    fun setLocale(activity: Activity, languageCode: String?) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val resources: Resources = activity.resources
+        val config: Configuration = resources.getConfiguration()
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.getDisplayMetrics())
     }
 }

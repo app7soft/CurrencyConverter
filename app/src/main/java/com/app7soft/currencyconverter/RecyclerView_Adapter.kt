@@ -1,25 +1,29 @@
 package com.app7soft.currencyconverter
 
 import android.app.Activity
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.Color
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.app7soft.currencyconverter.MainActivity.Companion.SymbolsNames
 import com.app7soft.currencyconverter.MainActivity.Companion.SymbolsToNamesCollection
 import com.app7soft.currencyconverter.MainActivity.Companion.sharedPreferences
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_list_row.view.*
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class RecyclerView_Adapter(private var countryList: ArrayList<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
@@ -49,11 +53,15 @@ class RecyclerView_Adapter(private var countryList: ArrayList<String>) : Recycle
         holder.itemView.Symbol.text = countryFilterList[position]
         holder.itemView.Nazwa.text = SymbolsToNamesCollection[countryFilterList[position]].toString()
 
-        if (FlagaResource(countryFilterList[position]) != 0) {
-            holder.itemView.Flaga.setImageResource(FlagaResource(countryFilterList[position]))
-        } else {
-            holder.itemView.Flaga.setImageResource(R.drawable.pusta_flaga)
+
+        //holder.itemView.Flaga.setImageResource(FlagaResource(countryFilterList[position]))
+        try {
+            holder.itemView.Flaga.setImageDrawable(ContextCompat.getDrawable(mcontext, FlagaResource(countryFilterList[position])))
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().log(countryFilterList[position])
         }
+
+
 
         holder.itemView.setOnClickListener {
             Log.d("Selected:", countryFilterList[position])
@@ -115,7 +123,7 @@ class RecyclerView_Adapter(private var countryList: ArrayList<String>) : Recycle
             if (MainActivity.mInterstitialAd.isLoaded) {
                 MainActivity.mInterstitialAd.show()
             } else {
-                Timber.tag("Mik").d( "The interstitial wasn't loaded yet.")
+                Timber.tag("Mik").d("The interstitial wasn't loaded yet.")
             }
         }
     }

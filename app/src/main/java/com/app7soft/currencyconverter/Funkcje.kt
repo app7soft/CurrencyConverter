@@ -1,6 +1,7 @@
 package com.app7soft.currencyconverter
 
 import android.content.SharedPreferences
+import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import java.util.*
 

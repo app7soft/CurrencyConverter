@@ -5,16 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SymbolSearch">
+    <!--layout_height="52dp"-->
 
     <ImageView
         android:id="@+id/WhiteSpace"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="52dp"
         android:background="#ffffff"
         android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:background="@drawable/line"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/SymbolSearch"/>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adViewSymbolSearch"
@@ -30,26 +39,13 @@
     <ImageButton
         android:id="@+id/ButtonBack"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/_50sdp"
         android:background="@null"
         android:onClick="back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/SymbolSearch"
-        app:layout_constraintBottom_toBottomOf="@+id/SymbolSearch"
+        app:layout_constraintTop_toBottomOf="@+id/WhiteSpace"
         app:layout_constraintWidth_percent="0.15"/>
 
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        app:layout_constraintHeight_percent="0.038"
-        app:layout_constraintStart_toStartOf="@+id/ButtonBack"
-        app:layout_constraintTop_toTopOf="@+id/ButtonBack"
-        app:layout_constraintBottom_toBottomOf="@+id/ButtonBack"
-        app:layout_constraintEnd_toEndOf="@+id/ButtonBack"
-        app:layout_constraintWidth_percent="0.067"
-        app:srcCompat="@drawable/arrow_b" />
 
     <SearchView
         android:id="@+id/SymbolSearch"
@@ -61,6 +57,17 @@
         app:layout_constraintTop_toBottomOf="@+id/WhiteSpace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ButtonBack"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        app:layout_constraintStart_toStartOf="@+id/ButtonBack"
+        app:layout_constraintTop_toTopOf="@+id/ButtonBack"
+        app:layout_constraintBottom_toBottomOf="@+id/ButtonBack"
+        app:layout_constraintEnd_toEndOf="@+id/ButtonBack"
+        app:layout_constraintWidth_percent="0.067"
+        app:srcCompat="@drawable/arrow_b" />
 
     <ImageView
         android:id="@+id/line"

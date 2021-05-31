@@ -170,6 +170,6 @@ fun FlagaResource(s: String): Int{
         "ZMK"-> return R.drawable.zmw
         "ZMW"-> return R.drawable.zmw
         "ZWL"-> return R.drawable.zwl
+        else -> return R.drawable.pusta_flaga
     }
-    return 0
 }

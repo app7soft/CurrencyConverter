@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Währungsrechner</string>
+    <string name="UpdatingRates">Preise aktualisieren</string>
+    <string name="LastUpdate">Letztes Update:</string>
+    <string name="LoadingFailed">Laden der Raten fehlgeschlagen</string>
+    <string name="CheckConnection">Überprüfen Sie Ihre Internetverbindung und aktualisieren Sie sie</string>
+    <string name="Connection104">Die Aktualisierung der Preise war nicht erfolgreich. Versuchen Sie es später noch einmal.</string>
+    <string name="Rate">Bewertungs App</string>
+    <string name="Info">Infos</string>
+    <string name="Privacy">Privatsphäre</string>
+    <string name="Share">Teilen</string>
+    <string name="MyCurrency">Wechselkurse</string>
+    <string name="NoticeBold">Beachten</string>
+    <string name="Search">Suche</string>
+    <string name="Notice">Die hier angegebenen Wechselkurse dienen nur zur Information. Die Daten werden von FixerApi bereitgestellt und alle 1 Stunde aktualisiert. Die Preise können sich jederzeit ändern und wir können ihre Richtigkeit nicht garantieren.\n\nVor jeder Umtauschtransaktion empfehlen wir, die offiziellen Kurse am Ort der Transaktion zu überprüfen.\nWir übernehmen keine Verantwortung für Verluste, die durch in dieser App gelesene Informationen entstehen.</string>
+</resources>

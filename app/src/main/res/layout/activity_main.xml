@@ -232,12 +232,12 @@
 <!--
     <EditText
         android:id="@+id/Currency1new"
-        android:layout_width="3dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/_5sdp"
         style="@style/Currency"
         android:fontFamily="@font/circular_pro_medium"
-       android:gravity="right"
+        android:gravity="right"
         android:background="@null"
         android:textCursorDrawable="@drawable/cursor"
         android:cursorVisible="true"
@@ -352,7 +352,6 @@
         style="@style/Kalkulator"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
         android:text="+"
         app:layout_constraintStart_toStartOf="@+id/TS3"
         app:layout_constraintTop_toTopOf="@+id/dziel" />
@@ -361,7 +360,6 @@
         android:id="@+id/minus"
         style="@style/Kalkulator"
         android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
         android:text="-"
         app:layout_constraintTop_toTopOf="@+id/dziel"
         app:layout_constraintStart_toStartOf="@+id/Del"/>
@@ -371,7 +369,6 @@
         style="@style/Kalkulator"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
         android:text="×"
         app:layout_constraintTop_toTopOf="@+id/dziel"
         app:layout_constraintStart_toStartOf="@+id/TS2"/>
@@ -380,7 +377,6 @@
         android:id="@+id/dziel"
         style="@style/Kalkulator"
         android:background="@drawable/buttons_calc"
-        android:onClick="Convert"
         android:text="÷"
         android:layout_marginTop="@dimen/_4sdp"
         app:layout_constraintTop_toTopOf="@+id/tlo"
@@ -405,7 +401,6 @@
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="7"
         app:layout_constraintTop_toBottomOf="@+id/dziel"
         app:layout_constraintStart_toStartOf="@id/TS1" />
@@ -415,7 +410,6 @@
         style="@style/Buttons"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="8"
         app:layout_constraintTop_toTopOf="@+id/TS7"
         app:layout_constraintStart_toStartOf="@+id/TS2" />
@@ -425,7 +419,6 @@
         style="@style/Buttons"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="9"
         app:layout_constraintTop_toTopOf="@+id/TS7"
         app:layout_constraintStart_toStartOf="@+id/TS3" />
@@ -468,7 +461,6 @@
         android:id="@+id/C"
         style="@style/Buttons"
         android:background="@drawable/buttons_orange"
-        android:onClick="Convert"
         android:text="C"
         android:textColor="#ffffff"
         app:layout_constraintTop_toTopOf="@+id/TS6"
@@ -479,7 +471,6 @@
         style="@style/Buttons"
         android:layout_marginTop="@dimen/_4sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="4"
         app:layout_constraintTop_toBottomOf="@+id/TS7"
         app:layout_constraintStart_toStartOf="@id/TS1" />
@@ -489,7 +480,6 @@
         style="@style/Buttons"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="5"
         app:layout_constraintTop_toTopOf="@+id/TS4"
         app:layout_constraintStart_toStartOf="@+id/TS2"/>
@@ -499,7 +489,6 @@
         style="@style/Buttons"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="6"
         app:layout_constraintTop_toTopOf="@+id/TS4"
         app:layout_constraintStart_toStartOf="@+id/TS3"/>
@@ -511,7 +500,6 @@
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="1"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@+id/TS4"
@@ -523,7 +511,6 @@
         style="@style/Buttons"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="2"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toTopOf="@+id/TS1"
@@ -535,7 +522,6 @@
         style="@style/Buttons"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="3"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toTopOf="@+id/TS1"
@@ -559,7 +545,6 @@
         style="@style/Button0"
         android:layout_marginTop="@dimen/_4sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text="0"
         app:layout_constraintTop_toBottomOf="@+id/TS1"
         app:layout_constraintStart_toStartOf="@+id/TS1"
@@ -570,7 +555,6 @@
         style="@style/Buttons"
         android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/buttons"
-        android:onClick="Convert"
         android:text=","
         app:layout_constraintTop_toTopOf="@+id/TS0"
         app:layout_constraintStart_toStartOf="@+id/TS3"/>
@@ -582,7 +566,6 @@
         android:background="@drawable/button_grey"
         android:text="="
         android:textColor="#ffffff"
-        android:onClick="Convert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/TS3"
