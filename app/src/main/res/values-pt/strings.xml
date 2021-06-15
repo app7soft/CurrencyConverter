@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Taxas de Câmbio</string>
+    <string name="UpdatingRates">Atualizando taxas</string>
+    <string name="LastUpdate">Última atualização:</string>
+    <string name="LoadingFailed">Falha ao carregar taxas</string>
+    <string name="CheckConnection">Verifique sua conexão com a Internet e atualize</string>
+    <string name="Connection104">A atualização das taxas não teve sucesso. Tente mais tarde.</string>
+    <string name="Rate">Avaliar app</string>
+    <string name="Info">Informações</string>
+    <string name="Privacy">Privacidade</string>
+    <string name="Share">Compartilhar</string>
+    <string name="MyCurrency">Taxas de Câmbio</string>
+    <string name="NoticeBold">Aviso</string>
+    <string name="Search">Procurar</string>
+    <string name="Notice">As taxas de câmbio apresentadas aqui são apenas informativas. Os dados são fornecidos pelo FixerApi e atualizados uma vez a cada 1 hora. As taxas podem ser alteradas a qualquer momento e não podemos garantir sua precisão. \n\nAntes de qualquer transação de câmbio, sugerimos verificar as taxas oficiais no local da transação. \nNão nos responsabilizamos por quaisquer perdas incorridas como resultado das informações lidas neste app .</string>
+</resources>

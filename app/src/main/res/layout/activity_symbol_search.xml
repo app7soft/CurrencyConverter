@@ -54,6 +54,7 @@
         android:iconifiedByDefault="false"
         android:searchIcon="@null"
         android:queryHint="@string/Search"
+        android:queryBackground="@null"
         app:layout_constraintTop_toBottomOf="@+id/WhiteSpace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ButtonBack"/>
@@ -82,7 +83,7 @@
         android:id="@+id/SymbolRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/_100sdp"
+        android:paddingBottom="@dimen/_50sdp"
         app:layout_constraintTop_toBottomOf="@+id/SymbolSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Taux de change</string>
     <string name="UpdatingRates">Mise à jour des tarifs</string>
-    <string name="LastUpdate">Dernière mise à jour:</string>
+    <string name="LastUpdate">Mise à jour:</string>
     <string name="LoadingFailed">Échec du chargement des tarifs</string>
     <string name="CheckConnection">Vérifiez votre connexion Internet et actualisez</string>
     <string name="Connection104">La mise à jour des taux a échoué. Réessayez plus tard.</string>

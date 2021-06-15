@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Valutaomvandlare</string>
+    <string name="UpdatingRates">Uppdatera priser</string>
+    <string name="LastUpdate">Uppdaterad:</string>
+    <string name="LoadingFailed">Priser som laddas misslyckades</string>
+    <string name="CheckConnection">Kontrollera din internetanslutning och uppdatera</string>
+    <string name="Connection104">Uppdatering av priser var misslyckad. Försök igen senare.</string>
+    <string name="Rate">Betygsätt app</string>
+    <string name="Info">Info</string>
+    <string name="Privacy">Integritet</string>
+    <string name="Share">Dela app</string>
+    <string name="MyCurrency">Växelkurser</string>
+    <string name="NoticeBold">OBS</string>
+    <string name="Search">Sök</string>
+    <string name="Notice">Växelkurserna som presenteras här är endast informativa. Data tillhandahålls av FixerApi och uppdateras en gång i timmen. Priser kan ändras när som helst och vi kan inte garantera att de är korrekta. \n\nInnan valutatransaktioner föreslår vi att du kontrollerar officiella kurser på transaktionsplatsen. \nVi tar inget ansvar för eventuella förluster som uppstår till följd av information som läses i denna app.</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Döviz Kurları</string>
+    <string name="UpdatingRates">Fiyatlar Güncelleme</string>
+    <string name="LastUpdate">Güncellenmiş:</string>
+    <string name="LoadingFailed">Oranlar yüklenemedi</string>
+    <string name="CheckConnection">İnternet bağlantınızı kontrol edin ve yenileyin</string>
+    <string name="Connection104">Oranların güncellenmesi başarısız oldu. Daha sonra tekrar deneyin.</string>
+    <string name="Rate">Uygulamayı değerlendir</string>
+    <string name="Info">Bilgi</string>
+    <string name="Privacy">Gizlilik</string>
+    <string name="Share">Paylaş</string>
+    <string name="MyCurrency">Döviz Kurları</string>
+    <string name="NoticeBold">Farkına varmak</string>
+    <string name="Search">Arama</string>
+    <string name="Notice">Burada sunulan döviz kurları yalnızca bilgi amaçlıdır. Veriler FixerApi tarafından sağlanır ve her 1 saatte bir yenilenir. Oranlar herhangi bir zamanda değişebilir ve bunların doğruluğunu garanti edemeyiz.\n\nHerhangi bir takas işleminden önce, işlemin yapıldığı yerdeki resmi oranları kontrol etmenizi öneririz.\nBu uygulamada okunan bilgilerden kaynaklanan herhangi bir kayıp için sorumluluk kabul etmiyoruz.</string>
+</resources>

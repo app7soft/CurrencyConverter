@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.json.JSONObject
 import timber.log.Timber
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var CurrencyRatesResponse: JSONObject? = null //Obecne kursy walut zwócone przez API
-    private var SymbolsToNamesResponse: JSONObject? = null //Mapowanie symboli na pełna Nazwe waluty zwócone przez API
+    private var SymbolsToNamesResponse: JSONObject? = JSONObject("""{"AED":"United Arab Emirates Dirham","AFN":"Afghan Afghani","ALL":"Albanian Lek","AMD":"Armenian Dram","ANG":"Netherlands Antillean Guilder","AOA":"Angolan Kwanza","ARS":"Argentine Peso","AUD":"Australian Dollar","AWG":"Aruban Florin","AZN":"Azerbaijani Manat","BAM":"Bosnia-Herzegovina Convertible Mark","BBD":"Barbadian Dollar","BDT":"Bangladeshi Taka","BGN":"Bulgarian Lev","BHD":"Bahraini Dinar","BIF":"Burundian Franc","BMD":"Bermudan Dollar","BND":"Brunei Dollar","BOB":"Bolivian Boliviano","BRL":"Brazilian Real","BSD":"Bahamian Dollar","BTC":"Bitcoin","BTN":"Bhutanese Ngultrum","BWP":"Botswanan Pula","BYN":"New Belarusian Ruble","BYR":"Belarusian Ruble","BZD":"Belize Dollar","CAD":"Canadian Dollar","CDF":"Congolese Franc","CHF":"Swiss Franc","CLF":"Chilean Unit of Account (UF)","CLP":"Chilean Peso","CNY":"Chinese Yuan","COP":"Colombian Peso","CRC":"Costa Rican Col\u00f3n","CUC":"Cuban Convertible Peso","CUP":"Cuban Peso","CVE":"Cape Verdean Escudo","CZK":"Czech Republic Koruna","DJF":"Djiboutian Franc","DKK":"Danish Krone","DOP":"Dominican Peso","DZD":"Algerian Dinar","EGP":"Egyptian Pound","ERN":"Eritrean Nakfa","ETB":"Ethiopian Birr","EUR":"Euro","FJD":"Fijian Dollar","FKP":"Falkland Islands Pound","GBP":"British Pound Sterling","GEL":"Georgian Lari","GGP":"Guernsey Pound","GHS":"Ghanaian Cedi","GIP":"Gibraltar Pound","GMD":"Gambian Dalasi","GNF":"Guinean Franc","GTQ":"Guatemalan Quetzal","GYD":"Guyanaese Dollar","HKD":"Hong Kong Dollar","HNL":"Honduran Lempira","HRK":"Croatian Kuna","HTG":"Haitian Gourde","HUF":"Hungarian Forint","IDR":"Indonesian Rupiah","ILS":"Israeli New Sheqel","IMP":"Manx pound","INR":"Indian Rupee","IQD":"Iraqi Dinar","IRR":"Iranian Rial","ISK":"Icelandic Kr\u00f3na","JEP":"Jersey Pound","JMD":"Jamaican Dollar","JOD":"Jordanian Dinar","JPY":"Japanese Yen","KES":"Kenyan Shilling","KGS":"Kyrgystani Som","KHR":"Cambodian Riel","KMF":"Comorian Franc","KPW":"North Korean Won","KRW":"South Korean Won","KWD":"Kuwaiti Dinar","KYD":"Cayman Islands Dollar","KZT":"Kazakhstani Tenge","LAK":"Laotian Kip","LBP":"Lebanese Pound","LKR":"Sri Lankan Rupee","LRD":"Liberian Dollar","LSL":"Lesotho Loti","LTL":"Lithuanian Litas","LVL":"Latvian Lats","LYD":"Libyan Dinar","MAD":"Moroccan Dirham","MDL":"Moldovan Leu","MGA":"Malagasy Ariary","MKD":"Macedonian Denar","MMK":"Myanma Kyat","MNT":"Mongolian Tugrik","MOP":"Macanese Pataca","MRO":"Mauritanian Ouguiya","MUR":"Mauritian Rupee","MVR":"Maldivian Rufiyaa","MWK":"Malawian Kwacha","MXN":"Mexican Peso","MYR":"Malaysian Ringgit","MZN":"Mozambican Metical","NAD":"Namibian Dollar","NGN":"Nigerian Naira","NIO":"Nicaraguan C\u00f3rdoba","NOK":"Norwegian Krone","NPR":"Nepalese Rupee","NZD":"New Zealand Dollar","OMR":"Omani Rial","PAB":"Panamanian Balboa","PEN":"Peruvian Nuevo Sol","PGK":"Papua New Guinean Kina","PHP":"Philippine Peso","PKR":"Pakistani Rupee","PLN":"Polish Zloty","PYG":"Paraguayan Guarani","QAR":"Qatari Rial","RON":"Romanian Leu","RSD":"Serbian Dinar","RUB":"Russian Ruble","RWF":"Rwandan Franc","SAR":"Saudi Riyal","SBD":"Solomon Islands Dollar","SCR":"Seychellois Rupee","SDG":"Sudanese Pound","SEK":"Swedish Krona","SGD":"Singapore Dollar","SHP":"Saint Helena Pound","SLL":"Sierra Leonean Leone","SOS":"Somali Shilling","SRD":"Surinamese Dollar","STD":"S\u00e3o Tom\u00e9 and Pr\u00edncipe Dobra","SVC":"Salvadoran Col\u00f3n","SYP":"Syrian Pound","SZL":"Swazi Lilangeni","THB":"Thai Baht","TJS":"Tajikistani Somoni","TMT":"Turkmenistani Manat","TND":"Tunisian Dinar","TOP":"Tongan Pa\u02bbanga","TRY":"Turkish Lira","TTD":"Trinidad and Tobago Dollar","TWD":"New Taiwan Dollar","TZS":"Tanzanian Shilling","UAH":"Ukrainian Hryvnia","UGX":"Ugandan Shilling","USD":"United States Dollar","UYU":"Uruguayan Peso","UZS":"Uzbekistan Som","VEF":"Venezuelan Bol\u00edvar Fuerte","VND":"Vietnamese Dong","VUV":"Vanuatu Vatu","WST":"Samoan Tala","XAF":"CFA Franc BEAC","XAG":"Silver (troy ounce)","XAU":"Gold (troy ounce)","XCD":"East Caribbean Dollar","XDR":"Special Drawing Rights","XOF":"CFA Franc BCEAO","XPF":"CFP Franc","YER":"Yemeni Rial","ZAR":"South African Rand","ZMK":"Zambian Kwacha (pre-2013)","ZMW":"Zambian Kwacha","ZWL":"Zimbabwean Dollar"}""")
     private var ratesCollection = HashMap<String, Any>()
 
     lateinit var manager: ReviewManager
@@ -71,6 +72,8 @@ class MainActivity : AppCompatActivity() {
     var gson = Gson()
     var json: String? = "" //temporary string to convert gson.JsonObject to JSONObject
     var CurrentCurrency: String = ""
+    var System: String = "" //zmienna do przechowywania systemu formatowania liczb /EN, ES lub PL/
+    var DecimalSeparator: Char = ',' //w zaleznosci od systemu może byc różny. Oddziela całkowite liczby o ułamków
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_Light_NoActionBar)
@@ -90,7 +93,20 @@ class MainActivity : AppCompatActivity() {
             setLocale(this, "en")
             StrangeLanguage = true
         }
-        //Test END
+        System = NumberFormatingSystem() //ustawiamy sposób formatowania liczb w zaleznosci od kraju np. 10,000.33 ....
+        TSp.text=DecimalSeparator.toString()
+
+        ////////////////////// Test code
+        /*
+        Timber.tag("Mik").d("System: "+System+" Separator: /"+DecimalSeparator+"/")
+        var aaa=PlToLocale("100 000 000,234")
+        Timber.tag("Mik").d("PlToLocale test: "+aaa)
+        if(System=="EN") aaa=LocaleToPL("100,000,000.234")
+        else if (System=="ES") aaa=LocaleToPL("100.000.000,234")
+        else if (System=="PL") aaa=LocaleToPL("100 000 000,234")
+        Timber.tag("Mik").d("LocaleToPl test: "+aaa)
+        */
+        ////////////////////// End of Test Code
 
         sharedPreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -122,19 +138,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             Timber.tag("Mik").d("To NIE jest pierwsza instalacja aplikacji")
             editor.putInt("RunNumber", sharedPreferences.getInt("RunNumber", 0) + 1) //Inkrementujemy numer uruchomienia
-            Currency1.text = sharedPreferences.getString("Currency1Amount", "0")
+            Currency1.text = sharedPreferences.getString("Currency1Amount", "0")?.let { PlToLocale(it) }
             editor.commit()
         }
         setFlags() //Ustawiamy Flagi i Symbole
 
-        //Currency1.text="test"
-
-
         RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
+
 
         if (sharedPreferences.contains("CurrencyRatesResponse")) {
             CurrencyRatesResponse = gson.fromJson(sharedPreferences.getString("CurrencyRatesResponse", ""), JSONObject::class.java)
-            SymbolsToNamesResponse = gson.fromJson(sharedPreferences.getString("SymbolsToNamesResponse", ""), JSONObject::class.java)
+            if(sharedPreferences.getString("SymbolsToNamesResponse", "") != "") {
+                SymbolsToNamesResponse = gson.fromJson(sharedPreferences.getString("SymbolsToNamesResponse", ""), JSONObject::class.java)
+            }
             InitRates()
             InitNames()
             updateChildCurrencies()
@@ -144,7 +160,7 @@ class MainActivity : AppCompatActivity() {
             initReviews()
         }
         //If first time or last update was mor than one hour
-        if (!sharedPreferences.contains("RunNumber") or (LastUpdateDiff() > 60)) {
+        if (!sharedPreferences.contains("RunNumber") or (LastUpdateDiff() > 60) or !sharedPreferences.contains("CurrencyRatesResponse")) {
             getRequest() //Updejt walut
         } else {
             RatesUpdateOnStart = false
@@ -241,7 +257,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (StrangeLanguage) setLocale(this,"en")
+        if (StrangeLanguage) setLocale(this, "en")
     }
 
     private fun getRequest() {
@@ -260,7 +276,7 @@ class MainActivity : AppCompatActivity() {
                 { response ->
                     Timber.tag("Mik").d("Response: " + response)
                     if (response.toString().contains("error")) {
-                        if(!isFinishing()) showAlertDialog104()
+                        if (!isFinishing()) showAlertDialog104()
                         DataLoading.setVisibility(View.GONE)
                         RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
                         RatesUpdateOnStart = false
@@ -285,7 +301,7 @@ class MainActivity : AppCompatActivity() {
                     Timber.tag("Mik").d("response Not OK: " + error)
                     RefreshDate.text = getString(R.string.LastUpdate) + " " + sharedPreferences.getString("LastUpdate", "")
                     if ((RatesUpdateOnStart == false) or (sharedPreferences.getInt("RunNumber", 0) == 1) or (ratesCollection.size == 0)) {
-                        if(!isFinishing()) showAlertDialog()
+                        if (!isFinishing()) showAlertDialog()
                     } else {
                         Toast.makeText(this, R.string.CheckConnection, Toast.LENGTH_LONG).show();
                     }
@@ -299,12 +315,12 @@ class MainActivity : AppCompatActivity() {
                 null,
                 { response ->
                     if (response.toString().contains("error")) {
-                        if(!isFinishing()) showAlertDialog104()
+                        if (!isFinishing()) showAlertDialog104()
                     } else {
                         SymbolsToNamesResponse = response.getJSONObject("symbols")  //namesResponse = response.getJSONObject("symbols")
-                        InitNames()
                         editor.putString("SymbolsToNamesResponse", gson.toJson(SymbolsToNamesResponse))
                         editor.commit()
+                        InitNames()
                         DataLoading.setVisibility(View.GONE)
                     }
                     //Timber.tag("Mik").d("SymbolsToNamesResponse:"+SymbolsToNamesResponse.toString())
@@ -394,9 +410,9 @@ class MainActivity : AppCompatActivity() {
         var str: String
         //val namesAndValuesMap = matchCurrencyNamesWithCodes(CurrencyRatesResponse, SymbolsToNamesResponse)
 
-        Timber.tag("Mik").d("c1: " + cur1)
+        //Timber.tag("Mik").d("c1: " + cur1)
         c1 = cur1.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
-        Timber.tag("Mik").d("c1: " + c1.toString())
+        //Timber.tag("Mik").d("c1: " + c1.toString())
 
         //Timber.tag("Mik").d("ratesCollection[1]: "+ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")])
         //Timber.tag("Mik").d("Symbol1: "+sharedPreferences.getString("Currency1Symbol", "EUR"))
@@ -405,7 +421,7 @@ class MainActivity : AppCompatActivity() {
         if(ratesCollection.size!=0) {
             c2 = calculateEquivalent(ratesCollection[sharedPreferences.getString("Currency1Symbol", "EUR")]!!, ratesCollection[sharedPreferences.getString("Currency2Symbol", "USD")]!!, c1)
         }else{
-           c2= 0.0
+            c2= 0.0
         }//Timber.tag("Mik").d("CalculateEquivalent: "+c2.toString())
 
         str = ustaw_dokladnosc(c2)
@@ -460,10 +476,10 @@ class MainActivity : AppCompatActivity() {
             re = s
         } else {
             while (s1.length > 3) {
-                newS = s1.takeLast(3) + " " + newS
+                newS = s1.takeLast(3) + " " + newS
                 s1 = s1.dropLast(3)
             }
-            re = (s1 + " " + newS).dropLast(1) + s2
+            re = (s1 + " " + newS).dropLast(1) + s2
         }
 
         if (ujemna){
@@ -484,7 +500,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "0")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "0"))
                     updateChildCurrencies()
                 }
             }
@@ -498,7 +514,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "1")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "1"))
                     updateChildCurrencies()
                 }
             }
@@ -512,7 +528,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "2")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "2"))
                     updateChildCurrencies()
                 }
             }
@@ -526,7 +542,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "3")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "3"))
                     updateChildCurrencies()
                 }
             }
@@ -540,7 +556,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "4")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "4"))
                     updateChildCurrencies()
                 }
             }
@@ -554,7 +570,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "5")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "5"))
                     updateChildCurrencies()
                 }
             }
@@ -568,7 +584,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "6")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "6"))
                     updateChildCurrencies()
                 }
             }
@@ -582,7 +598,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "7")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "7"))
                     updateChildCurrencies()
                 }
             }
@@ -596,7 +612,7 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "8")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "8"))
                     updateChildCurrencies()
                 }
             }
@@ -610,14 +626,14 @@ class MainActivity : AppCompatActivity() {
                         przelicz()
                     }
                 } else if (Currency1.text.length < MaxLength) {
-                    Currency1.text = GroupBy3(Currency1.text.toString() + "9")
+                    Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.toString()) + "9"))
                     updateChildCurrencies()
                 }
             }
             R.id.TSp -> {
                 //Timber.tag("Mik").d(Currency1.text.toString().contains(',').toString())
                 //zabezpieczenie przed dwoma przecinkami w jednej liczbie
-                var s = Currency1.text
+                var s = LocaleToPL(Currency1.text.toString())
                 Timber.tag("Mik").d("s: " + s)
                 if (s.last().isDigit()) {
                     s = s.dropLastWhile { it.isDigit() }
@@ -630,19 +646,19 @@ class MainActivity : AppCompatActivity() {
                 //koniec zabezpieczenia przed dwoma przecinkami
 
                 if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("×")) or (Currency1.text.contains("÷"))) {
-                    if ((Currency1.text.length < MaxEQLength - 1) and (Currency1.text.last() != ',') and (Currency1.text.last() != '+') and (Currency1.text.last() != '-') and (Currency1.text.last() != '×') and (Currency1.text.last() != '÷')) {
-                        Currency1.text = Currency1.text.toString() + ","
+                    if ((Currency1.text.length < MaxEQLength - 1) and (Currency1.text.last() != DecimalSeparator) and (Currency1.text.last() != '+') and (Currency1.text.last() != '-') and (Currency1.text.last() != '×') and (Currency1.text.last() != '÷')) {
+                        Currency1.text = Currency1.text.toString() + DecimalSeparator
                     }
-                } else if ((Currency1.text.length < MaxLength - 1) && !Currency1.text.toString()
-                                .contains(',')
+                } else if ((Currency1.text.length < MaxLength - 1) && !(Currency1.text.toString().contains(DecimalSeparator))
                 ) {
-                    Currency1.text = Currency1.text.toString() + ","
+                    Currency1.text = Currency1.text.toString() + DecimalSeparator
                 }
             }
             R.id.C -> {
                 showAdd()
                 Currency1.text = "0"
                 Currency2.text = "0"
+                SaveData()
             }
             R.id.Del -> {
                 showAdd()
@@ -651,13 +667,13 @@ class MainActivity : AppCompatActivity() {
                     Currency2.text = "0"
                 } else {
                     if ((Currency1.text.first() == '-')) {
-                        Currency1.text = GroupBy3(Currency1.text.dropLast(1).toString())
+                        Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.dropLast(1).toString())))
                         updateChildCurrencies()
                     } else if ((Currency1.text.contains("+")) or (Currency1.text.contains("-")) or (Currency1.text.contains("÷")) or (Currency1.text.contains("×"))) {
                         Currency1.text = Currency1.text.dropLast(1).toString()
                         przeliczDel()
                     } else {
-                        Currency1.text = GroupBy3(Currency1.text.dropLast(1).toString())
+                        Currency1.text = PlToLocale(GroupBy3(LocaleToPL(Currency1.text.dropLast(1).toString())))
                         updateChildCurrencies()
                     }
                 }
@@ -683,7 +699,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.wynik -> {
-                var str = Currency1.text.toString().replace("\\s".toRegex(), "") //remove white spaces
+                var str = LocaleToPL(Currency1.text.toString()).replace("\\s".toRegex(), "") //remove white spaces
                 if (!str.last().isDigit()) {
                     return
                 }
@@ -696,7 +712,7 @@ class MainActivity : AppCompatActivity() {
                     val result = expression.evaluate()
                     Timber.tag("Mik").d("Result is: " + result.toString())
                     val s = ustaw_dokladnosc(result)
-                    Currency1.text = GroupBy3(s.replace('.', ','))
+                    Currency1.text = PlToLocale(GroupBy3(s.replace('.', ',')))
                     updateChildCurrencies()
 
                 } catch (ex: ArithmeticException) {
@@ -712,7 +728,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun przelicz(){
-        var str = Currency1.text.toString().replace("\\s".toRegex(), "") //remove white spaces
+        var str = LocaleToPL(Currency1.text.toString()).replace("\\s".toRegex(), "") //remove white spaces
         if (!str.last().isDigit()) { //jeśli na końcu jest przecinek lub znak to usuwamy
             return
         }
@@ -725,27 +741,28 @@ class MainActivity : AppCompatActivity() {
             //Timber.tag("Mik").d("Result is: " + result.toString())
             val s = ustaw_dokladnosc(result)
             //Currency1.text = GroupBy3(s.replace('.', ','))
-            Currency2.text = GroupBy3(Calculate(s))
+            Currency2.text = PlToLocale(GroupBy3(Calculate(s)))
 
         } catch (ex: ArithmeticException) {
             // Display an error message
             Currency2.text = "e"
         }
+        SaveData()
     }
 
     //funkcja do sprawdzania czy w innych jezykach sie wywali. Jesli tak to zmieniami Locale
     fun test_przelicz(){
-         var str = "100.22+5.1"
-         val expression = ExpressionBuilder(str).build()
-         val result = expression.evaluate()
-         val s = ustaw_dokladnosc(result)
-         val c1 = s.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
+        var str = "100.22+5.1"
+        val expression = ExpressionBuilder(str).build()
+        val result = expression.evaluate()
+        val s = ustaw_dokladnosc(result)
+        val c1 = s.replace("\\s".toRegex(), "").replace(',', '.').toDouble()
     }
 
 
 
     fun przeliczDel(){
-        var str = Currency1.text.toString().replace("\\s".toRegex(), "") //remove white spaces
+        var str = LocaleToPL(Currency1.text.toString()).replace("\\s".toRegex(), "") //remove white spaces
         if (!str.last().isDigit()) {
             str=str.dropLast(1)
         }
@@ -758,12 +775,13 @@ class MainActivity : AppCompatActivity() {
             //Timber.tag("Mik").d("Result is: " + result.toString())
             val s = ustaw_dokladnosc(result)
             //Currency1.text = GroupBy3(s.replace('.', ','))
-            Currency2.text = GroupBy3(Calculate(s))
+            Currency2.text = PlToLocale(GroupBy3(Calculate(s)))
 
         } catch (ex: ArithmeticException) {
             // Display an error message
             Currency2.text = "e"
         }
+        SaveData()
     }
 
 
@@ -773,16 +791,27 @@ class MainActivity : AppCompatActivity() {
         }
     }*/
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.tag("Mik").d("onDestroy called...")
+    /*override fun onStop() {
+        super.onStop()
+        Timber.tag("Mik").d("onStop called...")
         val editor = sharedPreferences.edit()
-        Timber.tag("Mik").d("Currency1: " + Currency1.text.toString())
+        //Timber.tag("Mik").d("Currency1 on Stop: " + Currency1.text.toString())
 
         if(IsCurrency1Number()) {
-            editor.putString("Currency1Amount", Currency1.text.toString())
+            editor.putString("Currency1Amount", LocaleToPL(Currency1.text.toString()))
+            Timber.tag("Mik").d("Currency1 on Stop: " + Currency1.text.toString())
         }
         editor.commit()
+    }*/
+
+    fun SaveData() {
+        if(IsCurrency1Number()) {
+            //Timber.tag("Mik").d("saving data currency1: " + Currency1.text.toString())
+            val editor = sharedPreferences.edit()
+            editor.putString("Currency1Amount", LocaleToPL(Currency1.text.toString()))
+            editor.commit()
+            Timber.tag("Mik").d("Currency1 saved: " + Currency1.text.toString())
+        }
     }
 
     fun showAlertDialog() {
@@ -973,15 +1002,15 @@ class MainActivity : AppCompatActivity() {
             }
         }else return "0"
 
-    /*else { //dla Kryptowalut
-        str = String.format("%.10f", c)
-        while (str.takeLast(1) == "0") {
-            str = str.dropLast(1)
-        }
-        while (str.length >= 5 && str.takeLast(3).toString().toInt() >= 101) {
-            str = str.dropLast(1)
-        }
-    }*/
+        /*else { //dla Kryptowalut
+            str = String.format("%.10f", c)
+            while (str.takeLast(1) == "0") {
+                str = str.dropLast(1)
+            }
+            while (str.length >= 5 && str.takeLast(3).toString().toInt() >= 101) {
+                str = str.dropLast(1)
+            }
+        }*/
         if(ujemna) str='-'+str
         return str
     }
@@ -1022,20 +1051,97 @@ class MainActivity : AppCompatActivity() {
     }
 
     public fun IsCurrency1Number():Boolean{
-        var tmp = Currency1.text.toString()
+        var tmp = LocaleToPL(Currency1.text.toString())
+
         if (tmp.first()=='-') {
             tmp=tmp.drop(1)
         }
-        Timber.tag("Mik").d("tmp: " + tmp)
-        tmp = tmp.replace(",", "").replace(" ", "")
+        //Timber.tag("Mik").d("tmp: " + tmp)
+        tmp = tmp.replace(",", "").replace(" ", "")
         return tmp.isDigitsOnly()
     }
 
     private fun updateChildCurrencies(){
+        val ttt=GroupBy3(Calculate( LocaleToPL(Currency1.text.toString())))
+        //Timber.tag("Mik").d("tadam: "+ttt)
         if(IsCurrency1Number()) {
-            Currency2.text = GroupBy3(Calculate(Currency1.text.toString()))
+            //Timber.tag("Mik").d("tadam: "+ttt)
+            Currency2.text = PlToLocale(GroupBy3(Calculate( LocaleToPL(Currency1.text.toString()))))
         }
-        Kurs.text = "1 "+sharedPreferences.getString("Currency1Symbol", "EUR")+" = "+Calculate("1")+" "+sharedPreferences.getString("Currency2Symbol", "EUR")
+        Kurs.text = "1 "+sharedPreferences.getString("Currency1Symbol", "EUR")+" = "+PlToLocale(GroupBy3(Calculate("1")))+" "+sharedPreferences.getString("Currency2Symbol", "EUR")
+        SaveData()
+    }
+
+    fun NumberFormatingSystem():String{
+        //3 systems of Numbers
+        //10 000,00 PL-Default
+        //10,000.00 EN - Angielsko języczne, to damy te z dla dziwnych cyfr czyli np Arabski
+        //10.000,00 ES - nieangilesko języczne
+
+        val nf: NumberFormat = NumberFormat.getInstance(Locale.getDefault())
+        var d = 0.1
+        var z = nf.format(d)
+        DecimalSeparator = z.dropLast(1).last()
+        //Timber.tag("Mik").d("DecimalSeparator:/"+DecimalSeparator+"/")
+        d=1000.0
+        z = nf.format(d)
+        //Timber.tag("Mik").d("z: "+z)
+        var Odstep = z.drop(1).first()
+        //Timber.tag("Mik").d("Odstep:/"+Odstep+"/")
+        val sys: String
+
+        if(DecimalSeparator==',' && Odstep == ' ') {
+            sys="PL"
+        }
+        else if(DecimalSeparator=='.' && Odstep==','){
+            sys="EN"
+        }
+        else if(DecimalSeparator==',' && Odstep=='.'){
+            sys="ES"
+        }
+        else {
+            sys="EN"
+            DecimalSeparator=='.'
+        }
+        Timber.tag("Mik").d("System: "+sys)
+        return sys
+    }
+
+    fun PlToLocale(sss:String):String{
+        //3 systems of Numbers
+        //10 000,00 PL-Default
+        //10,000.00 EN - Angielsko języczne, to damy te z dla dziwnych cyfr czyli np Arabski
+        //10.000,00 ES - nieangilesko języczne
+        var s=sss
+
+        if(System=="PL"){
+            return s
+        }else if (System=="ES"){
+            //convert to PLtoES
+            s=s.replace("\\s".toRegex(), ".")
+            return s
+        }else { //EN
+            //convert to PLtoEN
+            s=s.replace(',', '.').replace("\\s".toRegex(), ",")
+            return s
+        }
+
+    }
+
+    fun LocaleToPL(sss:String):String{
+        var s=sss
+
+        if(System=="PL"){
+            return s
+        }else if (System=="ES"){
+            //convert to EStoPL
+            s=s.replace('.', ' ')
+            return s
+        }else { //EN
+            //convert to ENtoPL
+            s=s.replace(',', ' ').replace('.', ',')
+            return s
+        }
     }
 
 
@@ -1062,13 +1168,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAdd(){
-       if (sharedPreferences.getInt("RunNumber", 10) >= ShowIntRunNumber && F().LastInterstitialMin(sharedPreferences) >= ShowIntMin){
-           if (mInterstitialAd.isLoaded) {
+        if (sharedPreferences.getInt("RunNumber", 10) >= ShowIntRunNumber && F().LastInterstitialMin(sharedPreferences) >= ShowIntMin){
+            if (mInterstitialAd.isLoaded) {
                 mInterstitialAd.show()
             } else {
                 Timber.tag("Mik").d("The interstitial wasn't loaded yet.")
             }
-       }
+        }
     }
 
     private fun initReviews() {

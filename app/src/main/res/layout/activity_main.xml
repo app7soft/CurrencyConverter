@@ -36,7 +36,7 @@
         android:background="#68A519"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/WhiteSpace" />
+        app:layout_constraintTop_toBottomOf="@id/WhiteSpace" />
 
     <TextView
         android:id="@+id/MyCurrency"
